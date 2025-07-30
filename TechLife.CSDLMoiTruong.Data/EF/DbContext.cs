@@ -14,9 +14,10 @@ namespace TechLife.CSDLMoiTruong.Data.EF
        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
 
             base.OnModelCreating(modelBuilder);
         }
+
+        public DbSet<LoaiCayTrong> LoaiCayTrongs { get; set; }
     }
 }

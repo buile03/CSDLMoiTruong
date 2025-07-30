@@ -1,0 +1,89 @@
+﻿@using TechLife.CSDLMoiTruong.App.Extensions
+@using TechLife.CSDLMoiTruong.Common;
+@using TechLife.CSDLMoiTruong.Common.Result;
+@model PagedResult<TechLife.CSDLMoiTruong.Model.LoaiCayTrong.LoaiCayTrongVm>
+<div class="box">
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Tên loại cây trồng</th>
+                        <th>Mã loại cây trồng</th>
+                        <th width="10%" class="text-center">Vị trí</th>
+                        <th width="10%" class="text-center">Áp dụng</th>
+                        <th width="20%" class="text-center">Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        if (Model != null && Model.Items != null && Model.Items.Count() > 0)
+                        {
+                            int stt = 0;
+                            foreach (var d in Model.Items)
+                            {
+                                <tr>
+                                    <td class="align-middle"><strong>@(++stt). @d.Name</strong></td>
+                                    <td class="align-middle"><strong>@d.Code</strong></td>
+                                    <td class="text-center align-middle">
+                                        <input type="number" min="1" value="@d.Order" data-url="/LoaiCayTrong/UpdateOrder/" data-id="@SystemFunctions.EncodeId(d.Id)" class="form-control form-control-sm txtOrder text-right" />
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <input type="checkbox" data-url="/LoaiCayTrong/UpdateStatus/" data-id="@SystemFunctions.EncodeId(d.Id)" class="chStatus" checked="@d.IsStatus" />
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <a title="Sửa" data-link="@Context.Request.GetRawUrl()" data-url="/LoaiCayTrong/Edit/?id=@SystemFunctions.EncodeId(d.Id)" data-toggle="modal" data-target="#modal" class="btn btn-warning btn-sm popup"><i class="fa fa-edit"></i> Sửa</a>
+                                        <a title="Xóa" data-link="@Context.Request.GetRawUrl()" data-url="/LoaiCayTrong/Delete/?id=@SystemFunctions.EncodeId(d.Id)" data-toggle="modal" data-target="#modal" class="btn btn-danger btn-sm popup-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Xóa</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td class="text-center align-middle" colspan="4"><em>Không có kết quả.</em></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer clearfix">
+        @{
+            if (Model.TotalRecords > Model.PageSize)
+            {
+                <div class="card-footer">
+                    @await Component.InvokeAsync("Paging", new { page = Model })
+                </div>
+            }
+        }
+    </div>
+</div>
+<script>
+    $(".txtOrder").on("change", function () {
+        updateData($(this).data("url"), $(this).data("id"), $(this).val());
+    });
+    $(".chStatus").on("change", function () {
+        updateData($(this).data("url"), $(this).data("id"));
+    });
+    $(".popup-delete").on("click", function () {
+        var url = $(this).data("url");
+        var id = $(this).data("id");
+        var urlBack = $(this).data("link");
+        $.SmartMessageBox({
+            title: "Thông báo!",
+            content: "Bạn muốn xóa loại cây trồng này?",
+            buttons: '[Đóng][Xác nhận]'
+        }, function (ButtonPressed) {
+            if (ButtonPressed === "Xác nhận") {
+                DeleteData(url, id, function () {
+                    let element = document.getElementById('box-content');
+                    loadContent(urlBack, element);
+                });
+            }
+        });
+    });
+</script>

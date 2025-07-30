@@ -94,6 +94,7 @@ namespace TechLife.CSDLMoiTruong.App
                     return Task.CompletedTask;
                 };
             });
+            services.AddInfrastructure();
             services.AddHttpContextAccessor();
 
             services.AddTransient(typeof(ILogger<>), (typeof(Logger<>)));

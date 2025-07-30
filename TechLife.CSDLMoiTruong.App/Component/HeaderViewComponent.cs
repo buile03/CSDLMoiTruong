@@ -35,7 +35,7 @@ namespace TechLife.CSDLMoiTruong.App.Component
             {
                 menus.AddRange(new List<MenuViewModel>
                 {
-                    new MenuViewModel { Name = "Danh mục cây trồng", Url = "/DanhMucCayTrong", Icon = "fa-leaf", Module = HeThong.sinhvatgayhai.ToString() },
+                    new MenuViewModel { Name = "Loại cây trồng", Url = "/LoaiCayTrong", Icon = "fa-leaf", Module = HeThong.sinhvatgayhai.ToString() },
                     new MenuViewModel { Name = "Sinh vật gây hại", Url = "/SinhVatGayHai", Icon = "fa-bug", Module = HeThong.sinhvatgayhai.ToString() },
                     new MenuViewModel { Name = "Địa bàn ảnh hưởng", Url = "/DiaBanAnhHuong", Icon = "fa-map", Module = HeThong.sinhvatgayhai.ToString() },
                     new MenuViewModel { Name = "Số liệu SVGH", Url = "/SoLieuSinhVatGayHai", Icon = "fa-line-chart", Module = HeThong.sinhvatgayhai.ToString() }

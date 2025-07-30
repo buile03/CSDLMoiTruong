@@ -234,19 +234,29 @@ namespace TechLife.CSDLMoiTruong.App.Extensions
             }
             else return null;
         }
+        //public static Guid GetUserId(this ClaimsPrincipal user)
+        //{
+        //    if (user.Identity.IsAuthenticated)
+        //    {
+        //        var userId = user.FindFirst("Id").Value;
+        //        if (string.IsNullOrEmpty(userId))
+        //            return Guid.Empty;
+
+        //        return Guid.Parse(userId);
+        //    }
+        //    return Guid.Empty;
+        //}
         public static Guid GetUserId(this ClaimsPrincipal user)
         {
-            if (user.Identity.IsAuthenticated)
-            {
-                var userId = user.FindFirst("Id").Value;
-                if (string.IsNullOrEmpty(userId))
-                    return Guid.Empty;
+            if (user?.Identity?.IsAuthenticated != true)
+                return Guid.Empty;
 
-                return Guid.Parse(userId);
-            }
-            return Guid.Empty;
+            var claim = user.FindFirst("Id");
+            if (claim == null || string.IsNullOrEmpty(claim.Value))
+                return Guid.Empty;
+
+            return Guid.TryParse(claim.Value, out var id) ? id : Guid.Empty;
         }
-
         public static string GetRawUrl(this HttpRequest request)
         {
             var httpContext = request.HttpContext;
