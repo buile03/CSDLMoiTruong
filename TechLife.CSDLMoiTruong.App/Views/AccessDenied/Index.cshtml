@@ -1,0 +1,154 @@
+﻿@using TechLife.CSDLMoiTruong.Common;
+@{
+    Layout = null;
+    ViewData["Title"] = "Lỗi quyền truy cập.";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewData["Title"]</title>
+    @*  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> *@
+    <link rel="shortcut icon" href="/admin/img/quochuy.png" type="image/x-icon">
+    <link rel="icon" href="/admin/img/quochuy.png" type="image/x-icon">
+
+    <link rel="apple-touch-icon" sizes="76x76" href="/admin/img/splash/touch-icon-ipad.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/admin/img/splash/touch-icon-iphone-retina.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/admin/img/splash/touch-icon-ipad-retina.png">
+    <link rel="apple-touch-startup-image" href="/admin/img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
+    <link rel="apple-touch-startup-image" href="/admin/img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
+    <link rel="apple-touch-startup-image" href="/admin/img/splash/iphone.png" media="screen and (max-device-width: 320px)">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" type="text/css" asp-append-version="true" media="screen" href="/admin/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" asp-append-version="true" media="screen" href="/admin/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" asp-append-version="true" media="screen" href="/admin/css/smartadmin-production-plugins.min.css">
+    <link rel="stylesheet" type="text/css" asp-append-version="true" media="screen" href="/admin/css/smartadmin-production.min.css">
+    <link rel="stylesheet" type="text/css" asp-append-version="true" media="screen" href="/admin/css/smartadmin-skins.min.css">
+    <link rel="stylesheet" type="text/css" asp-append-version="true" media="screen" href="/admin/css/smartadmin-rtl.min.css">
+    <link rel="stylesheet" type="text/css" asp-append-version="true" media="screen" href="/admin/css/app.css" />
+</head>
+<body class="smart-style-6 menu-on-top">
+    <!-- Content Wrapper. Contains page content -->
+    <div id="main" role="main">
+        <div id="content " class=" error-box">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="p-3 bg-light border rounded w-100 ">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="text-center">
+                                <h1 class="error-text-2 bounceInDown animated"> Error 401 <span class="particle particle--c"></span><span class="particle particle--a"></span><span class="particle particle--b"></span></h1>
+                                <h2 class="font-xl"><strong><i class="fa fa-fw fa-warning fa-lg text-warning"></i> Lỗi quyền truy cập</strong></h2>
+                                <br>
+                                <p class="lead">
+                                    Bạn không có quyền truy cập chức năng này! Vui lòng liên hệ với quản trị viên để được hỗ trợ.
+                                </p>
+                                <p class="font-md">
+                                    <b>Xin cám ơn!</b>
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <p class="no-margin margin-top-5">
+                                            Đăng xuất? <a href="/User/Logout"> tại đây</a> 
+                                        </p>
+                                    }
+                                </p>
+                                <br>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+    <div class="page-footer">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <span class="txt-color-white">NỀN TẢNG GIÁM SÁT TRỰC TUYẾN PHỤC VỤ CÔNG TÁC QUẢN LÝ NHÀ NƯỚC<span class="hidden-xs"> - Sở Khoa học và Công nghệ thành phố Huế </span> ©2025</span>
+            </div>
+        </div>
+    </div>
+    <!-- END SHORTCUT AREA -->
+    <!--================================================== -->
+    <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
+    <script data-pace-options='{ "restartOnRequestAfter": true }' src="/admin/js/plugin/pace/pace.min.js"></script>
+    <!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+    @* <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> *@
+    <script src="/admin/js/libs/jquery-2.1.1.min.js"></script>
+    <script>
+        if (!window.jQuery) {
+            document.write('<script src="/admin/js/libs/jquery-2.1.1.min.js"><\/script>');
+        }
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script>
+        if (!window.jQuery.ui) {
+            document.write('<script src="/admin/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+        }
+    </script>
+    <!-- IMPORTANT: APP CONFIG -->
+    <script src="/admin/js/app.config.js"></script>
+    <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
+    <script src="/admin/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script>
+
+    <!-- BOOTSTRAP JS -->
+    <script src="/admin/js/bootstrap/bootstrap.min.js"></script>
+
+    <!-- CUSTOM NOTIFICATION -->
+    <script src="/admin/js/notification/SmartNotification.min.js"></script>
+    <!-- JARVIS WIDGETS -->
+    <script src="/admin/js/smartwidgets/jarvis.widget.min.js"></script>
+    <!-- EASY PIE CHARTS -->
+    <script src="/admin/js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
+    <!-- SPARKLINES -->
+    <script src="/admin/js/plugin/sparkline/jquery.sparkline.min.js"></script>
+    <!-- JQUERY VALIDATE -->
+    <script src="/admin/js/plugin/jquery-validate/jquery.validate.min.js"></script>
+    <!-- JQUERY MASKED INPUT -->
+    <script src="/admin/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
+
+    <!-- JQUERY UI + Bootstrap Slider -->
+    <script src="/admin/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
+    <!-- browser msie issue fix -->
+    <script src="/admin/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
+    <!-- FastClick: For mobile devices -->
+    <script src="/admin/js/plugin/fastclick/fastclick.min.js"></script>
+    <!--[if IE 8]>
+
+    <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
+    <!-- MAIN APP JS FILE -->
+    <script src="/admin/js/app.min.js"></script>
+    <!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
+    <!-- Voice command : plugin -->
+    <script src="/admin/js/speech/voicecommand.min.js"></script>
+
+    <!-- Vector Maps Plugin: Vectormap engine, Vectormap language -->
+    <script src="/admin/js/plugin/vectormap/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="/admin/js/plugin/vectormap/jquery-jvectormap-world-mill-en.js"></script>
+
+    <!-- Full Calendar -->
+    <script src="/admin/js/plugin/moment/moment.min.js"></script>
+    <script src="/admin/js/plugin/fullcalendar/jquery.fullcalendar.min.js"></script>
+
+
+    <!-- JQUERY SELECT2 INPUT -->
+    <script src="/admin/js/plugin/select2/select2.min.js"></script>
+
+    <!-- Khởi tạo popover -->
+    <script>
+        // Khởi tạo toàn bộ popover sau khi load
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+        popoverTriggerList.forEach(el => new bootstrap.Popover(el));
+
+    </script>
+
+    <script asp-append-version="true" src="/admin/js/app.js"></script>
+
+</body>
+</html>

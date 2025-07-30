@@ -1,0 +1,20 @@
+﻿@model TechLife.CSDLMoiTruong.App.Models.ErrorViewModel
+
+
+@{
+    ViewData["Title"] = "Lỗi";
+}
+
+<h1 class="text-danger">Lỗi</h1>
+<h2 class="text-danger">Đã xảy ra lỗi khi xử lý yêu cầu của bạn.</h2>
+
+@if (Model != null && Model.ShowRequestId)
+{
+    <p><strong>Mã yêu cầu:</strong> <code>@Model.RequestId</code></p>
+}
+else
+{
+    <p><strong>Lỗi không xác định.</strong></p>
+}
+
+<p>Vui lòng thử lại sau hoặc liên hệ với quản trị viên.</p>

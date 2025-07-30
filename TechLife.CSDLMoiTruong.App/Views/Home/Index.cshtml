@@ -1,0 +1,33 @@
+﻿@using TechLife.CSDLMoiTruong.App.Extensions
+@using TechLife.CSDLMoiTruong.Common;
+@{
+    ViewData["Title"] = $"Tổng quan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section id="widget-grid">
+    <div class="row">
+        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="jarviswidget" id="wid-id-home" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-editbutton="false">
+                <header>
+                    <h2>@ViewData["Title"]</h2>
+                </header>
+                <div>
+                    <div class="jarviswidget-editbox"></div>
+                    <div class="widget-body">
+                        <form method="get">
+                            <div id="box-content">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+         
+        })
+    </script>
+}

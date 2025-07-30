@@ -1,0 +1,22 @@
+﻿@using TechLife.CSDLMoiTruong.Common;
+<div class="message">
+    @{
+        var alert = TempData.GetAlert();
+        if (alert != null)
+        {
+            if (alert.IsSuccessed)
+            {
+                <div class="callout callout-success">
+                    <p>@alert.Message</p>
+                </div>
+            }
+            else
+            {
+                <div class="callout callout-danger">
+                    <p>@alert.Message</p>
+                </div>
+            }
+
+        }
+    }
+</div>

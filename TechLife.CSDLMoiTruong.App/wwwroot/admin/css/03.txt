@@ -1,0 +1,12 @@
+
+Error: 7/3/2024 8:20:08 AM Đã có lỗi xãy ra khi xác thực vai trò
+System.AggregateException: One or more errors occurred. (Value cannot be null. (Parameter 'user'))
+   at System.Threading.Tasks.Task.WaitAllCore(Task[] tasks, Int32 millisecondsTimeout, CancellationToken cancellationToken)
+   at System.Threading.Tasks.Task.WaitAll(Task[] tasks)
+   at TechLife.Web.Extensions.Authorizations.AuthorizationHandler.IsInRoleRequirement(Guid userId, Object resource, IAuthorizationRequirement requirement) in D:\Projects\HuePortalV02\TechLife.Web\Extensions\Authorizations\AuthorizationHandler.cs:line 60
+
+Error: 7/3/2024 8:20:13 AM Đã có lỗi xãy ra khi xác thực vai trò
+System.AggregateException: One or more errors occurred. (Value cannot be null. (Parameter 'user'))
+   at System.Threading.Tasks.Task.WaitAllCore(Task[] tasks, Int32 millisecondsTimeout, CancellationToken cancellationToken)
+   at System.Threading.Tasks.Task.WaitAll(Task[] tasks)
+   at TechLife.Web.Extensions.Authorizations.AuthorizationHandler.IsInRoleRequirement(Guid userId, Object resource, IAuthorizationRequirement requirement) in D:\Projects\HuePortalV02\TechLife.Web\Extensions\Authorizations\AuthorizationHandler.cs:line 60

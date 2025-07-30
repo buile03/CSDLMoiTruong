@@ -1,0 +1,36 @@
+﻿@model TechLife.CSDLMoiTruong.App.Models.FormRequest
+<div class="modal-content">
+    <form id="modal-form-delete" enctype="multipart/form-data">
+        <div class="modal-header">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                
+            </button>
+            <h4 class="modal-title">@Model.Title</h4>
+        </div>
+        <div class="modal-body">
+            @{await Html.RenderPartialAsync("_Message");}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-3 text-center">
+                        <strong class="text-danger">@Model.Caption</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <button type="button" data-bs-dismiss="modal" class="btn btn-secondary">Đóng</button>
+            <button type="submit" class="btn btn-primary">Xác nhận</button>
+        </div>
+    </form>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial", new TechLife.CSDLMoiTruong.App.Models.FormRequest()
+        {
+            FromId = "modal-form-delete",
+            Url = Model.Url,
+            UrlBack = Model.UrlBack,
+            IsLoadPage = Model.IsLoadPage,
+            CallFuntion = Model.CallFuntion
+        });
+    }
+</div>

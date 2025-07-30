@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.15" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.35.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.35.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TechLife.CSDLMoiTruong.Common\TechLife.CSDLMoiTruong.Common.csproj" />
+<ProjectReference Include="..\TechLife.CSDLMoiTruong.Data\TechLife.CSDLMoiTruong.Data.csproj" />
+<ProjectReference Include="..\TechLife.CSDLMoiTruong.Model\TechLife.CSDLMoiTruong.Model.csproj" />
+  </ItemGroup>
+</Project>

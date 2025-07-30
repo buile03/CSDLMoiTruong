@@ -1,0 +1,117 @@
+﻿@using TechLife.CSDLMoiTruong.App.Extensions
+@using Microsoft.AspNetCore.Http.Extensions
+@using TechLife.CSDLMoiTruong.App.Extensions.Authorizations;
+@using System.Security.Claims
+@model NavigationViewModel
+@inject TechLife.CSDLMoiTruong.App.ApiClients.IUserApiClient _userService
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
+@{
+    // var user = new CustomClaimsPrincipal(_userService, this.User);
+    // string OrganName = user.GetUser().OrganName;
+    // string donvi = OrganName.ToUpper();
+
+    var user = new CustomClaimsPrincipal(_userService, this.User);
+    var userInfo = Context.Request.GetUser(); 
+    string donvi = userInfo?.OrganName?.ToUpper() ?? "KHÁCH";
+    string hoVaTen = userInfo?.HoVaTen ?? "Khách";
+    string avartar = userInfo?.AvartarUrl;
+    var loginType = userInfo?.LoginType;
+
+}
+<style>
+    .project-context > :first-child {
+        color: #ff8f00 !important;
+    }
+
+    .project-selector {
+        color: #fb3c4a !important;
+        font-weight: bold;
+    }
+</style>
+<header id="header">
+    <div class="project-context hidden-xs">
+        <span class="project-selector">PHẦN MỀM QUẢN LÝ MÔI TRƯỜNG <br /> @donvi </span>
+    </div>
+    <!-- end projects dropdown -->
+    <!-- pulled right: nav area -->
+    <div class="pull-right user-login">
+        <div class="user-panel">
+            <div class="pull-left image">
+                @if (!string.IsNullOrWhiteSpace(avartar))
+                {
+                    <div class="img-circle" style="overflow: hidden;">
+                        <img style="width:100%" src="@avartar" />
+                    </div>
+                }
+                else
+                {
+                    <div class="img-circle" style="overflow: hidden;">
+                        <i class="fa fa-user"></i>
+                    </div>
+                }
+
+            </div>
+            <div class="pull-left info">
+                <p>@hoVaTen</p>
+                <a target="_blank" href="/HDSD_NT_GSTT.pdf"> HDSD</a>
+                <a href="/Logout/" title="Sign Out" data-action="userLogout">Thoát</a>
+
+            </div>
+        </div>
+    </div>
+</header>
+
+@if (Model.Modules != null && Model.Modules.Count > 0)
+{
+    <aside id="left-panel">
+
+        <nav>
+            <ul>
+                @foreach (var m in Model.Modules)
+                {
+                    int max = Model.Menus.Where(v => v.Module == m.Module).Count();
+                    @if (max > 0)
+                    {
+                        <li>
+                            <a href="@m.Url"><span class="menu-item-parent"><i class="fa fa-lg fa-fw txt-color-blue @m.Icon"></i> @m.Name</span></a>
+                            <ul>
+                                @{
+                                    int temp = 0;
+
+                                    foreach (var item in Model.Menus.Where(v => v.Module == m.Module))
+                                    {
+                                        temp++;
+                                        if (temp < max)
+                                        {
+                                            <li class="@(item.IsActive ? "active" : "")"><a href="@item.Url">@item.Name</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li class="@(item.IsActive ? "active" : "")"><a href="@item.Url">@item.Name</a></li>
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="@(m.IsActive ? "active" : "")">
+                            <a href="@m.Url" title="@m.Name"><span class="menu-item-parent"><i class="fa fa-lg fa-fw txt-color-blue @m.Icon"></i> @m.Name</span></a>
+                        </li>
+                    }
+                }
+
+            </ul>
+        </nav>
+
+    </aside>
+}
+else
+{
+    <style>
+        .menu-on-top #main {
+            margin-top: 5px !important;
+        }
+    </style>
+}

@@ -1,0 +1,123 @@
+﻿@model TechLife.CSDLMoiTruong.App.Models.ModalFormRequest
+
+<script src="/admin/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="/admin/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+@if (!string.IsNullOrEmpty(Model.FunctionCallBack))
+{
+    <script>
+        defaultConfig(document.getElementById('@Model.FormId'));
+
+        $('#@Model.FormId').submit(function (e) {
+            ControlDisabled('@Model.FormId');
+
+            let params = window.location.search;
+
+            if ($(this).valid()) {
+                e.preventDefault();
+                let formData = new FormData(this);
+                let token = $('input[name="__RequestVerificationToken"]').val(); // 🔒 lấy token
+                $('.wait').addClass("loading");
+
+                $.ajax({
+                    url: '@Model.UrlSubmit',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'RequestVerificationToken': token // ✅ gửi token qua header
+                    },
+                    success: function (data) {
+                        hideLoading();
+                        ShowMessageData(data);
+                        if (data.isSuccessed) {
+                            dropModal();
+        @Html.Raw(Model.FunctionCallBack)
+                                }
+                    },
+                    error: function (xhr) {
+                        const error = xhr.responseJSON || { isSuccessed: false, message: "Lỗi không xác định!" };
+                        ShowMessageData(error);
+                        hideLoading();
+                        ControlEnabled('@Model.FormId');
+                    }
+                });
+            } else {
+                ControlEnabled('@Model.FormId');
+                ShowMessageData({ isSuccessed: false, message: 'Vui lòng nhập đầy đủ thông tin!' });
+            };
+        });
+    </script>
+}
+else
+{
+    int isReload = Model.IsReload ? 1 : 0;
+    int isRedirect = !String.IsNullOrWhiteSpace(Model.RedirectUrl) ? 1 : 0;
+    var queryString = Model.QueryLoadData != null && Model.QueryLoadData.Count > 0
+        ? String.Concat("?", String.Join("&", Model.QueryLoadData.Select(s => $"{s.Key}={s.Value}")))
+        : String.Empty;
+    var urlPath = !String.IsNullOrWhiteSpace(Model.UrlPathLoadData)
+        ? System.Web.HttpUtility.UrlDecode(Model.UrlPathLoadData)
+        : Model.IsReload || !String.IsNullOrWhiteSpace(Model.RedirectUrl)
+            ? String.Empty
+            : throw new Exception("Url paths not found!");
+
+    int autoClose = Model.AutoCloseModal ? 1 : 0;
+
+    <script>
+        defaultConfig(document.getElementById('@Model.FormId'));
+
+        $('#@Model.FormId').submit(function (e) {
+            ControlDisabled('@Model.FormId');
+
+            if ($(this).valid()) {
+                e.preventDefault();
+                let formData = new FormData(this);
+                let token = $('input[name="__RequestVerificationToken"]').val(); // 🔒 lấy token
+                $('.wait').addClass("loading");
+
+                $.ajax({
+                    url: '@Model.UrlSubmit',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'RequestVerificationToken': token // ✅ gửi token qua header
+                    },
+                    success: function (data) {
+                        if (data.isSuccessed) {
+                            if (@isReload) {
+                                window.location.reload();
+                            } else if (@isRedirect) {
+                                window.location.replace('@Model.RedirectUrl');
+                            } else {
+                                dropModal();
+                                hideLoading();
+                                ShowMessageData(data);
+                                let element = document.getElementById('@Model.LoadDataId');
+                                loadContent(`@Html.Raw(urlPath)`, element);
+                            }
+                        } else {
+                            hideLoading();
+                            ShowMessageData(data);
+                            if (@autoClose) {
+                                dropModal();
+                            }
+                            ControlEnabled('@Model.FormId');
+                        }
+                    },
+                    error: function (xhr) {
+                        const error = xhr.responseJSON || { isSuccessed: false, message: "Lỗi không xác định!" };
+                        ShowMessageData(error);
+                        ControlEnabled('@Model.FormId');
+                    }
+                });
+            } else {
+                ControlEnabled('@Model.FormId');
+                ShowMessageData({ isSuccessed: false, message: 'Vui lòng nhập đầy đủ thông tin!' });
+            };
+        });
+    </script>
+}
