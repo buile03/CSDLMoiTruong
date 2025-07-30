@@ -9,14 +9,14 @@ namespace TechLife.CSDLMoiTruong.Common.Enums
     {
         [StringValue(@"Trang chủ")]
         home = 1,
-        [StringValue(@"Bài viết đã xuất bản")]
-        baivietdaxuatban,
-        [StringValue(@"Tin bài")]
-        tinbai,
-        [StringValue(@"Ban biên tập")]
-        banbientap,
-        [StringValue(@"Lương cơ sở")]
-        mucluongcoso,
+        [StringValue(@"Sinh vật gây hại")]
+        sinhvatgayhai,
+        [StringValue(@"Thời tiết & sinh trưởng")]
+        thoitietvasinhtruong,
+        [StringValue(@"Chất lượng sản phẩm")]
+        chatluongsanpham,
+        [StringValue(@"Cở sở giống cây trồng")]
+        cosogiongcaytrong,
         [StringValue(@"Hệ thống")]
         hethong,
     }
@@ -33,24 +33,5 @@ namespace TechLife.CSDLMoiTruong.Common.Enums
         SSOOrganHueS
     }
 
-    //Chức vụ ban biên tập
-    public enum ChucVuBanBienTap : int
-    {
-
-        [StringValue(@"Trưởng ban")]
-        TruongBan = 1,
-
-        [StringValue(@"Phó trưởng ban")]
-        PhoTruongBan = 2,
-
-        [StringValue(@"Thành viên")]
-        ThanhVien = 3,
-    }
-    public enum PhanLoaiTin : int
-    {
-        [StringValue(@"Tin")]
-        Tin = 1,
-        [StringValue(@"Bài viết ngắn")]
-        BaiVietNgan = 2
-    }
+    
 }
