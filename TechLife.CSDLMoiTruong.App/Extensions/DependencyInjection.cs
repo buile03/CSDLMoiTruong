@@ -7,6 +7,7 @@ namespace TechLife.CSDLMoiTruong.App.Extensions
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services.AddTransient<ILoaiCayTrongService, LoaiCayTrongService>();
+            services.AddTransient<ISinhVatGayHaiService, SinhVatGayHaiService>();
 
             return services;
         }

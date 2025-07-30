@@ -19,5 +19,7 @@ namespace TechLife.CSDLMoiTruong.Data.EF
         }
 
         public DbSet<LoaiCayTrong> LoaiCayTrongs { get; set; }
+        public DbSet<SinhVatGayHai> SinhVatGayHais { get; set; }
+
     }
 }
