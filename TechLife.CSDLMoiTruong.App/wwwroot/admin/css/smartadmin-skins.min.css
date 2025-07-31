@@ -2986,6 +2986,10 @@ body.smart-style-4 {
     }
 }
 
+body.smart-style-6 {
+    font-family: RobotoDraft,Roboto,sans-serif;
+    -webkit-font-smoothing: antialiased
+}
 
     body.smart-style-6 .txt-color-green {
         color: #4CAF50 !important

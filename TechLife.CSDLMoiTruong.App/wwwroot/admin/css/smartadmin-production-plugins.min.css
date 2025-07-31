@@ -4206,6 +4206,7 @@ article.sortable-grid {
     float: left;
     width: 100%;
     position: relative;
+    font-size: 13px;
     -moz-border-radius: 0;
     -khtml-border-radius: 0;
     -webkit-border-radius: 0;
@@ -6550,8 +6551,7 @@ a.clearsearchclass, a.g-menu-item, a.soptclass {
         width: 100%;
         height: 100%;
         text-align: center;
-        display: block;
-        margin-top: 8px;
+        display: block
     }
 
 .select2-search {

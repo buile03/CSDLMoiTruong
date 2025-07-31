@@ -4140,6 +4140,14 @@
     animation-duration: .25s
 }
 
+.fade {
+    opacity: 0;
+    -webkit-transition: opacity .15s linear;
+    -moz-transition: opacity .15s linear;
+    -o-transition: opacity .15s linear;
+    transition: opacity .15s linear
+}
+
 @-moz-keyframes spin {
     0% {
         -moz-transform: rotate(0deg)
@@ -11875,6 +11883,7 @@ h3 {
     display: block;
     font-size: 19px;
     font-weight: 400;
+    margin: 20px 0;
     line-height: normal
 }
 
@@ -11933,7 +11942,7 @@ aside {
 
 #header {
     display: block;
-    height: 51px;
+    height: 49px;
     margin: 0;
     padding: 0 13px 0 0;
     background-color: #f3f3f3;
@@ -11950,7 +11959,7 @@ aside {
     #header > div {
         display: inline-block;
         vertical-align: middle;
-        height: 55px;
+        height: 49px;
         float: left
     }
 
@@ -12174,10 +12183,10 @@ aside {
 
 #left-panel {
     position: absolute;
-    top: 5px;
+    top: 0;
     left: 0;
     z-index: 904;
-    padding-top: 49px   
+    padding-top: 49px
 }
 
 #main {
@@ -13376,6 +13385,7 @@ input[type=color].ui-autocomplete-loading, input[type=date].ui-autocomplete-load
     background-image: -ms-linear-gradient(top,#f2f2f2 0,#fafafa 100%);
     background-image: -o-linear-gradient(top,#f2f2f2 0,#fafafa 100%);
     background-image: -linear-gradient(top,#f2f2f2 0,#fafafa 100%);
+    font-size: 14px
 }
 
     .fc-head-container thead tr th {
@@ -17873,6 +17883,7 @@ label input[type=checkbox][disabled].checkbox + span, label input[type=checkbox]
     }
 
     .jarviswidget header h2 {
+        width: 135px;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden
@@ -17951,6 +17962,7 @@ label input[type=checkbox][disabled].checkbox + span, label input[type=checkbox]
 
             .menu-on-top aside#left-panel nav > ul > li > a {
                 display: inline-block;
+                height: 68px;
                 text-shadow: none !important;
                 font-size: 13px;
                 text-decoration: none;
@@ -17977,6 +17989,7 @@ label input[type=checkbox][disabled].checkbox + span, label input[type=checkbox]
 }
 
 .menu-on-top .menu-item-parent {
+    max-width: 72px;
     min-width: 50px;
     white-space: nowrap;
     overflow: hidden;

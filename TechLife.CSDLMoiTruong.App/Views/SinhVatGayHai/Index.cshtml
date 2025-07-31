@@ -27,26 +27,22 @@
                             <div class="padding-bottom-10">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <label class="form-label">Loại cây trồng:</label>
-                                                <select class="form-select form-select-sm" asp-for="LoaiCayTrongId" asp-items="@ViewBag.LoaiCayTrongItems">
-                                                    <option value="0">Chọn loại cây trồng</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Từ khóa tìm kiếm:</label>
-                                                <div class="input-group input-group-sm">
-                                                    <input class="form-control" asp-for="Keyword" autocomplete="off" placeholder="Nhập từ khóa tìm kiếm...">
-                                                    <button class="btn btn-primary" type="submit">
-                                                        <i class="fa fa-search" aria-hidden="true"></i>
-                                                        Tìm kiếm
-                                                    </button>
-                                                </div>
-                                            </div>
+                                        <label class="form-label">Từ khóa tìm kiếm:</label>
+                                        <div class="input-group input-group-sm">
+                                            <input class="form-control" asp-for="Keyword" autocomplete="off" placeholder="Nhập từ khóa tìm kiếm...">
+                                            <button class="btn btn-primary" type="submit">
+                                                <i class="fa fa-search" aria-hidden="true"></i>
+                                                Tìm kiếm
+                                            </button>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 text-right">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Loại cây trồng:</label>
+                                        <select class="form-select form-select-sm" asp-for="LoaiCayTrongId" asp-items="@ViewBag.LoaiCayTrongItems">
+                                            <option value="0">Chọn loại cây trồng</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 text-right">
                                         <button type="button" title="Thêm sinh vật gây hại" data-link="@Context.Request.GetRawUrl("/SinhVatGayHai/List/")" data-url="/SinhVatGayHai/Create/" data-toggle="modal" data-target="#modal" class="btn btn-success btn-sm popup"><i class="fa fa-plus-circle"></i> Thêm mới</button>
                                     </div>
                                 </div>
@@ -61,14 +57,19 @@
     </div>
 </section>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        let element = document.getElementById('box-content');
-        loadContent('@Html.Raw(Context.Request.GetRawUrl("/SinhVatGayHai/List/"))', element);
 
-        $("#LoaiCayTrongId, #status").on("change", function () {
-            this.form.submit()
+
+@section scripts
+                    {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let element = document.getElementById('box-content');
+            loadContent('@Html.Raw(Context.Request.GetRawUrl("/SinhVatGayHai/List/"))', element);
+
+            $("#LoaiCayTrongId, #status").on("change", function () {
+                this.form.submit()
+            });
+            pageSetUp();
         });
-        pageSetUp();
-    });
-</script>
+    </script>
+}

@@ -1,5 +1,6 @@
 ﻿$(document).ready(function () {
     defaultConfig(this);
+    pageSetUp();
 });
 
 function defaultConfig(parent) {
@@ -10,12 +11,11 @@ function defaultConfig(parent) {
         });
     })
     parent?.querySelectorAll('.select2').forEach(function (e) {
-        const isCustomWidth = e.classList.contains('select2-80');
         $(e).select2({
-            width: isCustomWidth ? '80%' : '100%', 
+            width: "100%",
             theme: 'bootstrap-5'
         });
-    });
+    })
     parent?.querySelectorAll('.popup').forEach(function (e) {
         $(e).on("click", function (event) {
             event.preventDefault();
@@ -144,40 +144,23 @@ function loadContent(url, element, callback = null) {
     }
 }
 
-function loadHtml(url, callBack) {
+function loadHtml(url, params, callBack) {
     showLoading();
     if (url != "") {
         $.ajax({
             url: url,
+            data: params,
             type: "GET",
             success: function (data) {
+                hideLoading();
                 callBack(data);
             },
-            //error: function (jqXHR) {
-            //    ShowMessage(jqXHR.responseText);
-            //},
+            error: function (jqXHR) {
+                hideLoading();
+            },
         });
     }
-    hideLoading();
 }
-
-//function loadHtml(url, params, callBack) {
-//    showLoading();
-//    if (url != "") {
-//        $.ajax({
-//            url: url,
-//            data: params,
-//            type: "GET",
-//            success: function (data) {
-//                hideLoading();
-//                callBack(data);
-//            },
-//            error: function (jqXHR) {
-//                hideLoading();
-//            },
-//        });
-//    }
-//}
 function loadValue(url, callBack) {
     $.ajax({
         url: url,
@@ -822,4 +805,43 @@ function debounce(fn, ms) {
             fn.apply(context, args);
         }, ms)
     }
+}
+
+function showPopup(reff) {
+    showLoading();
+    hidePopup();
+    var url = $(reff).data('url');
+    var input = $(reff).data('link');
+    var type = $(reff).data('type');
+    var data = getUrlVars(decodeURIComponent(input));
+    $.ajax({
+        url: url,
+        type: "GET",
+        data: data,
+        success: function (data) {
+            if (data != null) {
+                $('#modal .modal-dialog').html(data);
+                $('#modal').modal("show");
+                if (type == null) {
+                    $('#modal .modal-dialog').removeClass("modal-lg");
+                }
+                else
+                    $('#modal .modal-dialog').addClass(type);
+
+                $('.datepicker').datepicker({
+                    format: 'dd/mm/yyyy',
+                    autoclose: true
+                });
+                $('.select2').select2({
+                    placeholder: 'Chọn',
+                });
+            }
+            hideLoading();
+        }
+    });
+}
+
+function hidePopup() {
+    $('#modal').modal("hide");
+    $('#modal .modal-dialog .modal-content').remove();
 }
