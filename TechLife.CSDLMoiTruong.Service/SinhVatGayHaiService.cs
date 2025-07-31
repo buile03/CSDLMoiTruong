@@ -108,6 +108,7 @@ namespace TechLife.CSDLMoiTruong.Service
                                 Description = sv.Description,
                                 Order = sv.Order,
                                 IsStatus = sv.IsStatus,
+                                LoaiCayTrongId = sv.LoaiCayTrongId,
                             };
 
                 return await query.FirstOrDefaultAsync();

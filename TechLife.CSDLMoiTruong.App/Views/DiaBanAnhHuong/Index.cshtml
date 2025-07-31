@@ -1,0 +1,67 @@
+﻿@using TechLife.CSDLMoiTruong.App.Extensions
+@model TechLife.CSDLMoiTruong.Model.DiaBanAnhHuong.DiaBanAnhHuongGetPagingRequest
+@{
+    ViewData["Title"] = "Danh sách loại cây trồng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section id="widget-grid">
+    <div class="row">
+        <!-- NEW WIDGET START -->
+        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="jarviswidget" id="wid-id-groups" data-widget-colorbutton="false"
+                 data-widget-deletebutton="false"
+                 data-widget-editbutton="false">
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-bank"></i> </span>
+                    <h2>@ViewData["Title"]</h2>
+                </header>
+                <div>
+                    <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+                        <!-- This area used as dropdown edit box -->
+                    </div>
+                    <!-- end widget edit box -->
+                    <!-- widget content -->
+                    <div class="widget-body">
+                        <form method="get">
+                            <div class="padding-bottom-10">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Từ khóa tìm kiếm:</label>
+                                        <div class="input-group input-group-sm">
+                                            <input class="form-control" asp-for="Keyword" autocomplete="off" placeholder="Nhập từ khóa tìm kiếm...">
+                                            <button class="btn btn-primary" type="submit">
+                                                <i class="fa fa-search" aria-hidden="true"></i>
+                                                Tìm kiếm
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 text-right">
+                                        <button type="button" title="Thêm loại cây trồng" data-link="@Context.Request.GetRawUrl("/DiaBanAnhHuong/List/")" data-url="/DiaBanAnhHuong/Create/" data-toggle="modal" data-target="#modal" class="btn btn-success btn-sm popup"><i class="fa fa-plus-circle"></i> Thêm mới</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="box-content">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+
+@section scripts
+    {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let element = document.getElementById('box-content');
+            loadContent('@Html.Raw(Context.Request.GetRawUrl("/DiaBanAnhHuong/List/"))', element);
+            $("#status").on("change", function () {
+                this.form.submit()
+            });
+            pageSetUp();
+        });
+    </script>
+}

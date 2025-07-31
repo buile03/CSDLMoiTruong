@@ -55,7 +55,7 @@ namespace TechLife.CSDLMoiTruong.App.Component
 
                         menus.AddRange(new List<MenuViewModel>
                 {
-                    new MenuViewModel { Name = "Danh mục giống", Url = "/DanhMucGiong", Icon = "fa-leaf", Module = HeThong.cosogiongcaytrong.ToString() },
+                    new MenuViewModel { Name = "Giống cây trồng", Url = "/GiongCayTrong", Icon = "fa-leaf", Module = HeThong.cosogiongcaytrong.ToString() },
                     new MenuViewModel { Name = "Cơ sở giống", Url = "/CoSoGiong", Icon = "fa-building", Module = HeThong.cosogiongcaytrong.ToString() }
                 });
 

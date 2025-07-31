@@ -4,16 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TechLife.CSDLMoiTruong.Data.Entities
+namespace TechLife.CSDLMoiTruong.Model.DiaBanAnhHuong
 {
-    public class LoaiCayTrong : BaseEntity
+    public class DiaBanAnhHuongVm
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
-        public virtual ICollection<GiongCayTrong> GiongCayTrongs { get; set; }
-        public virtual ICollection<SinhVatGayHai> SinhVatGayHais { get; set; }
-
+        public bool IsStatus { get; set; }
+        public int Order { get; set; }
     }
 }
