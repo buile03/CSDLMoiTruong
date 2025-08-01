@@ -13,6 +13,8 @@ namespace TechLife.CSDLMoiTruong.Data.Entities
         public string Code { get; set; }
         public string Description { get; set; }
         public virtual ICollection<SinhVatGayHai> SinhVatGayHais { get; set; }
+        public virtual ICollection<SoLieuSinhTruong> SoLieuSinhTruong { get; set; }
+
 
     }
 }
