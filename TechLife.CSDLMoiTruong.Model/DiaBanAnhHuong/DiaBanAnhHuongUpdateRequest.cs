@@ -10,14 +10,17 @@ namespace TechLife.CSDLMoiTruong.Model.DiaBanAnhHuong
 {
     public class DiaBanAnhHuongUpdateRequest : UpdateRequestBase
     {
-        [Required(ErrorMessage = "Vui lòng nhập tên địa bàn ảnh hưởng")]
-        [Display(Name = "Tên địa bàn ảnh hưởng")]
+        [Required(ErrorMessage = "Vui lòng nhập tên địa bàn")]
+        [Display(Name = "Tên địa bàn")]
         public string Name { get; set; }
 
-        [Display(Name = "Mã địa bàn ảnh hưởng")]
+        [Display(Name = "Mã địa bàn")]
         public string Code { get; set; }
 
         [Display(Name = "Mô tả")]
         public string Description { get; set; }
+
+        [Display(Name = "Địa bàn cha")]
+        public int? ParentId { get; set; }
     }
 }

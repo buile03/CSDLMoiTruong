@@ -3,11 +3,20 @@
 <div class="modal-content">
     <form id="modal-form" enctype="multipart/form-data">
         <div class="modal-header">
-            <h4 class="modal-title">Thêm mới địa bàn ảnh hưởng</h4>
+            <h4 class="modal-title">Thêm mới địa bàn</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
             <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label asp-for="ParentId" class="form-label"></label>
+                        <select asp-for="ParentId" asp-items="ViewBag.ParentItems" class="form-select" style="width:100%">
+                            <option value="">Gốc</option>
+                        </select>
+                        <span asp-validation-for="ParentId" class="text-danger"></span>
+                    </div>
+                </div>
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label asp-for="Code" class="form-label"></label>
@@ -25,13 +34,12 @@
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label asp-for="Description" class="form-label"></label>
-                        <input asp-for="Description" class="form-control" autocomplete="off" />
+                        <textarea asp-for="Description" class="form-control" autocomplete="off"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="modal-footer">
             @Html.AntiForgeryToken()
             <button type="button" data-bs-dismiss="modal" class="btn btn-secondary">Đóng</button>

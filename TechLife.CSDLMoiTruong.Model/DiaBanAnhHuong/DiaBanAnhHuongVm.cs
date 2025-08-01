@@ -12,6 +12,10 @@ namespace TechLife.CSDLMoiTruong.Model.DiaBanAnhHuong
         public string Name { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
+
+        public int? ParentId { get; set; }
+        public string ParentName { get; set; }
+
         public bool IsStatus { get; set; }
         public int Order { get; set; }
     }

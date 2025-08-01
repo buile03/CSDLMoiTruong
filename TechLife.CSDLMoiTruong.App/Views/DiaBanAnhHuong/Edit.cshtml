@@ -4,30 +4,37 @@
     <form id="modal-form" enctype="multipart/form-data">
         <div class="modal-header">
             <h4 class="modal-title">Sửa thông tin địa bàn</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
             <div class="row">
                 <div class="col-md-12">
                     <div class="mb-3">
-                        <label asp-for="Code" class="form-label"></label>
-                        <input asp-for="Code" class="form-control" autocomplete="off" />
-                        <span asp-validation-for="Code" class="text-danger"></span>
-
+                        <label asp-for="ParentId" class="form-label"></label>
+                        <select asp-for="ParentId" asp-items="@ViewBag.ParentItems" class="form-select" style="width:100%">
+                            <option value="">Gốc</option>
+                        </select>
+                        <span asp-validation-for="ParentId" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3">
-                        <label asp-for="Name" class="form-label"> </label>  <span class="text-danger">(*)</span>
+                        <label asp-for="Code" class="form-label"></label>
+                        <input asp-for="Code" class="form-control" autocomplete="off" />
+                        <span asp-validation-for="Code" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label"></label> <span class="text-danger">(*)</span>
                         <input asp-for="Name" class="form-control" autocomplete="off" />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3">
-                        <label asp-for="Description" class="form-label"> </label>
-                        <input asp-for="Description" class="form-control" autocomplete="off" />
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" class="form-control" autocomplete="off"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
                 </div>

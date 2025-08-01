@@ -9,5 +9,6 @@ namespace TechLife.CSDLMoiTruong.Model.DiaBanAnhHuong
 {
     public class DiaBanAnhHuongGetPagingRequest : GetPagingRequest
     {
+        public int? ParentId { get; set; }
     }
 }

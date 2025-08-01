@@ -5,6 +5,7 @@ using TechLife.CSDLMoiTruong.Common.Result;
 using TechLife.CSDLMoiTruong.Common;
 using TechLife.CSDLMoiTruong.Service;
 using TechLife.CSDLMoiTruong.Model.DiaBanAnhHuong;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TechLife.CSDLMoiTruong.App.Controllers
 {
@@ -23,8 +24,15 @@ namespace TechLife.CSDLMoiTruong.App.Controllers
             _diaBanAnhHuongService = diaBanAnhHuongService;
         }
 
-        public IActionResult Index(DiaBanAnhHuongGetPagingRequest request)
+        public async Task<IActionResult> Index(DiaBanAnhHuongGetPagingRequest request)
         {
+            var listDiaBan = await _diaBanAnhHuongService.GetAll();
+            ViewBag.ParentItems = listDiaBan.Select(v => new SelectListItem()
+            {
+                Text = v.Name,
+                Value = v.Id.ToString(),
+            }).ToList();
+
             return View(request);
         }
 
@@ -43,9 +51,24 @@ namespace TechLife.CSDLMoiTruong.App.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return PartialView();
+            try
+            {
+                var list = await _diaBanAnhHuongService.GetAll();
+                ViewBag.ParentItems = list.Select(v => new SelectListItem()
+                {
+                    Text = v.Name,
+                    Value = v.Id.ToString(),
+                }).ToList();
+
+                return PartialView();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Đã có lỗi xảy ra");
+                return PartialView();
+            }
         }
 
         [HttpPost]
@@ -75,13 +98,24 @@ namespace TechLife.CSDLMoiTruong.App.Controllers
             try
             {
                 var data = await _diaBanAnhHuongService.GetById(Convert.ToInt32(SystemHashUtil.DecodeID(id, SystemConstants.AppSettings.Key)));
+
+                var list = await _diaBanAnhHuongService.GetAll();
+                ViewBag.ParentItems = list.Select(v => new SelectListItem()
+                {
+                    Text = v.Name,
+                    Value = v.Id.ToString(),
+                    Selected = v.Id == data.ParentId
+                }).ToList();
+
                 var model = new DiaBanAnhHuongUpdateRequest()
                 {
+                    Id = id,
                     Name = data.Name,
                     Code = data.Code,
                     Description = data.Description,
-                    Id = id
+                    ParentId = data.ParentId
                 };
+
                 return PartialView(model);
             }
             catch (Exception ex)

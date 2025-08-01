@@ -12,5 +12,11 @@ namespace TechLife.CSDLMoiTruong.Data.Entities
         public string Name { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
+
+        public int? ParentId { get; set; }
+        public virtual DiaBanAnhHuong Parent { get; set; }
+        public virtual ICollection<DiaBanAnhHuong> Children { get; set; }
+
+      
     }
 }
