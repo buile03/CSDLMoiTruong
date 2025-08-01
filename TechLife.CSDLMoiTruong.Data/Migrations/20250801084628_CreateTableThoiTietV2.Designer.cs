@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TechLife.CSDLMoiTruong.Data.EF;
 
@@ -11,9 +12,11 @@ using TechLife.CSDLMoiTruong.Data.EF;
 namespace TechLife.CSDLMoiTruong.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250801084628_CreateTableThoiTietV2")]
+    partial class CreateTableThoiTietV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,6 +69,57 @@ namespace TechLife.CSDLMoiTruong.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DiaBanAnhHuong");
+                });
+
+            modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.GiongCayTrong", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CreateByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreateOnDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsStatus")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("LastModifiedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("LastModifiedOnDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("LoaiCayTrongId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OrganId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LoaiCayTrongId");
+
+                    b.ToTable("GiongCayTrong");
                 });
 
             modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.LoaiCayTrong", b =>
@@ -220,6 +274,17 @@ namespace TechLife.CSDLMoiTruong.Data.Migrations
                     b.ToTable("ThoiTiet");
                 });
 
+            modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.GiongCayTrong", b =>
+                {
+                    b.HasOne("TechLife.CSDLMoiTruong.Data.Entities.LoaiCayTrong", "LoaiCayTrong")
+                        .WithMany("GiongCayTrongs")
+                        .HasForeignKey("LoaiCayTrongId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LoaiCayTrong");
+                });
+
             modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.SinhVatGayHai", b =>
                 {
                     b.HasOne("TechLife.CSDLMoiTruong.Data.Entities.LoaiCayTrong", "LoaiCayTrong")
@@ -233,6 +298,8 @@ namespace TechLife.CSDLMoiTruong.Data.Migrations
 
             modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.LoaiCayTrong", b =>
                 {
+                    b.Navigation("GiongCayTrongs");
+
                     b.Navigation("SinhVatGayHais");
                 });
 #pragma warning restore 612, 618

@@ -1,17 +1,18 @@
 ﻿@using TechLife.CSDLMoiTruong.App.Extensions
 @using TechLife.CSDLMoiTruong.Common;
 @using TechLife.CSDLMoiTruong.Common.Result;
-@model PagedResult<TechLife.CSDLMoiTruong.Model.GiongCayTrong.GiongCayTrongVm>
-
+@model PagedResult<TechLife.CSDLMoiTruong.Model.ThoiTiet.ThoiTietVm>
 <div class="box">
-    <!-- /.box-header -->
     <div class="box-body">
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Tên giống cây trồng</th>
-                        <th>Loại cây trồng</th>
+                        <th>Khoảng thời gian</th>
+                        <th>Nhiệt độ cao nhất</th>
+                        <th>Nhiệt độ thấp nhất</th>
+                        <th>Độ ẩm TB</th>
+                        <th>Ngày mưa</th>
                         <th width="10%" class="text-center">Vị trí</th>
                         <th width="10%" class="text-center">Áp dụng</th>
                         <th width="20%" class="text-center">Chức năng</th>
@@ -25,17 +26,20 @@
                             foreach (var d in Model.Items)
                             {
                                 <tr>
-                                    <td class="align-middle"><strong>@(++stt). @d.Name</strong></td>
-                                    <td class="align-middle">@d.LoaiCayTrongName</td>
+                                    <td class="align-middle"><strong>@(++stt). @d.TuNgay.ToString("dd/MM/yyyy") - @d.DenNgay.ToString("dd/MM/yyyy")</strong></td>
+                                    <td class="align-middle">@d.NhietDoCaoNhat °C</td>
+                                    <td class="align-middle">@d.NhietDoThapNhat °C</td>
+                                    <td class="align-middle">@d.DoAmTB %</td>
+                                    <td class="align-middle">@d.NgayMua</td>
                                     <td class="text-center align-middle">
-                                        <input type="number" min="1" value="@d.Order" data-url="/GiongCayTrong/UpdateOrder/" data-id="@SystemFunctions.EncodeId(d.Id)" class="form-control form-control-sm txtOrder text-right" />
+                                        <input type="number" min="1" value="@d.Order" data-url="/ThoiTiet/UpdateOrder/" data-id="@SystemFunctions.EncodeId(d.Id)" class="form-control form-control-sm txtOrder text-right" />
                                     </td>
                                     <td class="text-center align-middle">
-                                        <input type="checkbox" data-url="/GiongCayTrong/UpdateStatus/" data-id="@SystemFunctions.EncodeId(d.Id)" class="chStatus" checked="@d.IsStatus" />
+                                        <input type="checkbox" data-url="/ThoiTiet/UpdateStatus/" data-id="@SystemFunctions.EncodeId(d.Id)" class="chStatus" checked="@d.IsStatus" />
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a title="Sửa" data-link="@Context.Request.GetRawUrl()" data-url="/GiongCayTrong/Edit/?id=@SystemFunctions.EncodeId(d.Id)" data-toggle="modal" data-target="#modal" class="btn btn-warning btn-sm popup"><i class="fa fa-edit"></i> Sửa</a>
-                                        <a title="Xóa" data-link="@Context.Request.GetRawUrl()" data-url="/GiongCayTrong/Delete/?id=@SystemFunctions.EncodeId(d.Id)" data-toggle="modal" data-target="#modal" class="btn btn-danger btn-sm popup-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Xóa</a>
+                                        <a title="Sửa" data-link="@Context.Request.GetRawUrl()" data-url="/ThoiTiet/Edit/?id=@SystemFunctions.EncodeId(d.Id)" data-toggle="modal" data-target="#modal" class="btn btn-warning btn-sm popup"><i class="fa fa-edit"></i> Sửa</a>
+                                        <a title="Xóa" data-link="@Context.Request.GetRawUrl()" data-url="/ThoiTiet/Delete/?id=@SystemFunctions.EncodeId(d.Id)" data-toggle="modal" data-target="#modal" class="btn btn-danger btn-sm popup-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Xóa</a>
                                     </td>
                                 </tr>
                             }
@@ -43,7 +47,7 @@
                         else
                         {
                             <tr>
-                                <td class="text-center align-middle" colspan="6"><em>Không có kết quả.</em></td>
+                                <td class="text-center align-middle" colspan="8"><em>Không có kết quả.</em></td>
                             </tr>
                         }
                     }
@@ -51,7 +55,6 @@
             </table>
         </div>
     </div>
-    <!-- /.box-body -->
     <div class="box-footer clearfix">
         @{
             if (Model.TotalRecords > Model.PageSize)
@@ -76,7 +79,7 @@
         var urlBack = $(this).data("link");
         $.SmartMessageBox({
             title: "Thông báo!",
-            content: "Bạn muốn xóa giống cây trồng này?",
+            content: "Bạn muốn xóa thông tin thời tiết này?",
             buttons: '[Đóng][Xác nhận]'
         }, function (ButtonPressed) {
             if (ButtonPressed === "Xác nhận") {

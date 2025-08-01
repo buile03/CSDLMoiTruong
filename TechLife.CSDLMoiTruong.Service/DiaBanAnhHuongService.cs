@@ -36,7 +36,7 @@ namespace TechLife.CSDLMoiTruong.Service
         {
             try
             {
-                var query = from g in _context.DiaBanAnhHuongs
+                var query = from g in _context.DiaBanAnhHuong
                             where !g.IsDelete
                             && (string.IsNullOrEmpty(request.Keyword) ||
                                (g.Description.Contains(request.Keyword) || g.Name.Contains(request.Keyword)))
@@ -73,7 +73,7 @@ namespace TechLife.CSDLMoiTruong.Service
         {
             try
             {
-                var query = from g in _context.DiaBanAnhHuongs
+                var query = from g in _context.DiaBanAnhHuong
                             where !g.IsDelete && g.IsStatus
                             select new DiaBanAnhHuongVm
                             {
@@ -97,7 +97,7 @@ namespace TechLife.CSDLMoiTruong.Service
         {
             try
             {
-                var query = from g in _context.DiaBanAnhHuongs
+                var query = from g in _context.DiaBanAnhHuong
                             where !g.IsDelete && g.Id == id
                             select new DiaBanAnhHuongVm
                             {
@@ -123,10 +123,10 @@ namespace TechLife.CSDLMoiTruong.Service
             {
                 _action = $"Thêm địa bàn ảnh hưởng \"{request.Name}\"";
 
-                if (await _context.DiaBanAnhHuongs.AnyAsync(x => x.Name == request.Name))
+                if (await _context.DiaBanAnhHuong.AnyAsync(x => x.Name == request.Name))
                     return Result<int>.Error(_action, $"Địa bàn ảnh hưởng \"{request.Name}\" đã tồn tại");
 
-                int total = await _context.DiaBanAnhHuongs.CountAsync();
+                int total = await _context.DiaBanAnhHuong.CountAsync();
 
                 var obj = new DiaBanAnhHuong()
                 {
@@ -142,7 +142,7 @@ namespace TechLife.CSDLMoiTruong.Service
                     LastModifiedOnDate = DateTime.Now,
                 };
 
-                _context.DiaBanAnhHuongs.Add(obj);
+                _context.DiaBanAnhHuong.Add(obj);
                 var result = await _context.SaveChangesAsync();
 
                 if (result > 0)
@@ -163,7 +163,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 int id = request.Id.DecodeId();
                 _action = $"Cập nhật thông tin địa bàn ảnh hưởng với Id: \"{id}\"";
 
-                var obj = await _context.DiaBanAnhHuongs.FindAsync(id);
+                var obj = await _context.DiaBanAnhHuong.FindAsync(id);
 
                 if (obj == null)
                     return Result<int>.Error(_action, "Không tìm thấy địa bàn ảnh hưởng cần sửa");
@@ -176,7 +176,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 obj.LastModifiedByUserId = null;
                 obj.LastModifiedOnDate = DateTime.Now;
 
-                _context.DiaBanAnhHuongs.Update(obj);
+                _context.DiaBanAnhHuong.Update(obj);
                 var result = await base.SaveChange();
 
                 if (result > 0)
@@ -197,7 +197,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 int id = request.Id.DecodeId();
                 _action = $"Xóa địa bàn ảnh hưởng với Id: \"{id}\"";
 
-                var obj = await _context.DiaBanAnhHuongs.FindAsync(id);
+                var obj = await _context.DiaBanAnhHuong.FindAsync(id);
                 if (obj == null)
                     return Result<int>.Error(_action, "Không tìm thấy địa bàn ảnh hưởng cần xóa", id);
 
@@ -207,7 +207,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 obj.LastModifiedByUserId = null;
                 obj.LastModifiedOnDate = DateTime.Now;
 
-                _context.DiaBanAnhHuongs.Update(obj);
+                _context.DiaBanAnhHuong.Update(obj);
                 var result = await base.SaveChange();
 
                 if (result > 0)
@@ -228,7 +228,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 int id = request.Id.DecodeId();
                 _action = $"Cập nhật vị trí hiển thị địa bàn ảnh hưởng với Id: \"{id}\"";
 
-                var obj = await _context.DiaBanAnhHuongs.FindAsync(id);
+                var obj = await _context.DiaBanAnhHuong.FindAsync(id);
 
                 if (obj == null)
                     return Result<int>.Error(_action, "Không tìm thấy địa bàn ảnh hưởng cần cập nhật");
@@ -239,7 +239,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 obj.LastModifiedByUserId = null;
                 obj.LastModifiedOnDate = DateTime.Now;
 
-                _context.DiaBanAnhHuongs.Update(obj);
+                _context.DiaBanAnhHuong.Update(obj);
                 var result = await base.SaveChange();
 
                 if (result > 0)
@@ -260,7 +260,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 int id = request.Id.DecodeId();
                 _action = $"Cập nhật trạng thái áp dụng địa bàn ảnh hưởng với Id: \"{id}\"";
 
-                var obj = await _context.DiaBanAnhHuongs.FindAsync(id);
+                var obj = await _context.DiaBanAnhHuong.FindAsync(id);
 
                 if (obj == null)
                     return Result<int>.Error(_action, "Không tìm thấy địa bàn ảnh hưởng cần cập nhật");
@@ -271,7 +271,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 obj.LastModifiedByUserId = null;
                 obj.LastModifiedOnDate = DateTime.Now;
 
-                _context.DiaBanAnhHuongs.Update(obj);
+                _context.DiaBanAnhHuong.Update(obj);
                 var result = await base.SaveChange();
 
                 if (result > 0)

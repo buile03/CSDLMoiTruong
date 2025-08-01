@@ -18,10 +18,10 @@ namespace TechLife.CSDLMoiTruong.Data.EF
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<LoaiCayTrong> LoaiCayTrongs { get; set; }
-        public DbSet<SinhVatGayHai> SinhVatGayHais { get; set; }
-        public DbSet<DiaBanAnhHuong> DiaBanAnhHuongs { get; set; }
-        public DbSet<GiongCayTrong> GiongCayTrongs { get; set; }
+        public DbSet<LoaiCayTrong> LoaiCayTrong { get; set; }
+        public DbSet<SinhVatGayHai> SinhVatGayHai { get; set; }
+        public DbSet<DiaBanAnhHuong> DiaBanAnhHuong { get; set; }
+        public DbSet<ThoiTiet> ThoiTiet { get; set; }
 
 
     }

@@ -36,8 +36,8 @@ namespace TechLife.CSDLMoiTruong.Service
         {
             try
             {
-                var query = from sv in _context.SinhVatGayHais
-                            join lct in _context.LoaiCayTrongs on sv.LoaiCayTrongId equals lct.Id
+                var query = from sv in _context.SinhVatGayHai
+                            join lct in _context.LoaiCayTrong on sv.LoaiCayTrongId equals lct.Id
                             where !sv.IsDelete
                             && (request.LoaiCayTrongId == null || sv.LoaiCayTrongId == request.LoaiCayTrongId)
                             && (string.IsNullOrEmpty(request.Keyword) || (sv.Name.Contains(request.Keyword)))
@@ -74,7 +74,7 @@ namespace TechLife.CSDLMoiTruong.Service
         {
             try
             {
-                var query = from sv in _context.SinhVatGayHais
+                var query = from sv in _context.SinhVatGayHai
                             where !sv.IsDelete && sv.IsStatus
                             select new SinhVatGayHaiVm
                             {
@@ -98,7 +98,7 @@ namespace TechLife.CSDLMoiTruong.Service
         {
             try
             {
-                var query = from sv in _context.SinhVatGayHais
+                var query = from sv in _context.SinhVatGayHai
                             where !sv.IsDelete && sv.Id == id
                             select new SinhVatGayHaiVm
                             {
@@ -125,10 +125,10 @@ namespace TechLife.CSDLMoiTruong.Service
             {
                 _action = $"Thêm sinh vật gây hại \"{request.Name}\"";
 
-                if (await _context.SinhVatGayHais.AnyAsync(x => x.Name == request.Name && x.LoaiCayTrongId == request.LoaiCayTrongId))
+                if (await _context.SinhVatGayHai.AnyAsync(x => x.Name == request.Name && x.LoaiCayTrongId == request.LoaiCayTrongId))
                     return Result<int>.Error(_action, $"Sinh vật gây hại \"{request.Name}\" đã tồn tại cho loại cây trồng này");
 
-                int total = await _context.SinhVatGayHais.CountAsync();
+                int total = await _context.SinhVatGayHai.CountAsync();
 
                 var obj = new SinhVatGayHai()
                 {
@@ -144,7 +144,7 @@ namespace TechLife.CSDLMoiTruong.Service
                     CreateOnDate = DateTime.Now,
                     LastModifiedOnDate = DateTime.Now,
                 };
-                _context.SinhVatGayHais.Add(obj);
+                _context.SinhVatGayHai.Add(obj);
                 var result = await _context.SaveChangesAsync();
                 if (result > 0)
                     return Result<int>.Success(_action, obj.Id);
@@ -164,7 +164,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 int id = request.Id.DecodeId();
                 _action = $"Cập nhật thông tin sinh vật gây hại với Id: \"{id}\"";
 
-                var obj = await _context.SinhVatGayHais.FindAsync(id);
+                var obj = await _context.SinhVatGayHai.FindAsync(id);
                 if (obj == null)
                     return Result<int>.Error(_action, "Không tìm thấy sinh vật gây hại cần sửa");
 
@@ -176,7 +176,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 obj.LoaiCayTrongId = request.LoaiCayTrongId;
                 obj.LastModifiedByUserId = null;
                 obj.LastModifiedOnDate = DateTime.Now;
-                _context.SinhVatGayHais.Update(obj);
+                _context.SinhVatGayHai.Update(obj);
                 var result = await base.SaveChange();
 
                 if (result > 0)
@@ -197,7 +197,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 int id = request.Id.DecodeId();
                 _action = $"Xóa sinh vật gây hại với Id: \"{id}\"";
 
-                var obj = await _context.SinhVatGayHais.FindAsync(id);
+                var obj = await _context.SinhVatGayHai.FindAsync(id);
                 if (obj == null)
                     return Result<int>.Error(_action, "Không tìm thấy sinh vật gây hại cần xóa", id);
 
@@ -206,7 +206,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 obj.IsDelete = true;
                 obj.LastModifiedByUserId = null;
                 obj.LastModifiedOnDate = DateTime.Now;
-                _context.SinhVatGayHais.Update(obj);
+                _context.SinhVatGayHai.Update(obj);
 
                 var result = await base.SaveChange();
                 if (result > 0)
@@ -227,7 +227,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 int id = request.Id.DecodeId();
                 _action = $"Cập nhật vị trí hiển thị sinh vật gây hại với Id: \"{id}\"";
 
-                var obj = await _context.SinhVatGayHais.FindAsync(id);
+                var obj = await _context.SinhVatGayHai.FindAsync(id);
                 if (obj == null)
                     return Result<int>.Error(_action, "Không tìm thấy sinh vật gây hại cần cập nhật");
 
@@ -236,7 +236,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 obj.Order = request.Value;
                 obj.LastModifiedByUserId = null;
                 obj.LastModifiedOnDate = DateTime.Now;
-                _context.SinhVatGayHais.Update(obj);
+                _context.SinhVatGayHai.Update(obj);
 
                 var result = await base.SaveChange();
                 if (result > 0)
@@ -257,7 +257,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 int id = request.Id.DecodeId();
                 _action = $"Cập nhật trạng thái áp dụng sinh vật gây hại với Id: \"{id}\"";
 
-                var obj = await _context.SinhVatGayHais.FindAsync(id);
+                var obj = await _context.SinhVatGayHai.FindAsync(id);
                 if (obj == null)
                     return Result<int>.Error(_action, "Không tìm thấy sinh vật gây hại cần cập nhật");
 
@@ -266,7 +266,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 obj.IsStatus = !obj.IsStatus;
                 obj.LastModifiedByUserId = null;
                 obj.LastModifiedOnDate = DateTime.Now;
-                _context.SinhVatGayHais.Update(obj);
+                _context.SinhVatGayHai.Update(obj);
 
                 var result = await base.SaveChange();
                 if (result > 0)

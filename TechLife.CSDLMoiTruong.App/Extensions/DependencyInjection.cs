@@ -9,7 +9,7 @@ namespace TechLife.CSDLMoiTruong.App.Extensions
             services.AddTransient<ILoaiCayTrongService, LoaiCayTrongService>();
             services.AddTransient<ISinhVatGayHaiService, SinhVatGayHaiService>();
             services.AddTransient<IDiaBanAnhHuongService, DiaBanAnhHuongService>();
-            services.AddTransient<IGiongCayTrongService, GiongCayTrongService>();
+            services.AddTransient<IThoiTietService, ThoiTietService>();
 
             return services;
         }

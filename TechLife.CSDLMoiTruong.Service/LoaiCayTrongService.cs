@@ -43,7 +43,7 @@ namespace TechLife.CSDLMoiTruong.Service
         {
             try
             {
-                var query = from g in _context.LoaiCayTrongs
+                var query = from g in _context.LoaiCayTrong
                             where !g.IsDelete
                             && (string.IsNullOrEmpty(request.Keyword) || (g.Description.Contains(request.Keyword) || g.Name.Contains(request.Keyword)))
                             select new LoaiCayTrongVm()
@@ -81,7 +81,7 @@ namespace TechLife.CSDLMoiTruong.Service
         {
             try
             {
-                var query = from g in _context.LoaiCayTrongs
+                var query = from g in _context.LoaiCayTrong
                             where !g.IsDelete && g.IsStatus
                             select new LoaiCayTrongVm
                             {
@@ -105,7 +105,7 @@ namespace TechLife.CSDLMoiTruong.Service
         {
             try
             {
-                var query = from g in _context.LoaiCayTrongs
+                var query = from g in _context.LoaiCayTrong
                             where !g.IsDelete && g.Id == id //&& g.IsStatus
                             select new LoaiCayTrongVm
                             {
@@ -131,10 +131,10 @@ namespace TechLife.CSDLMoiTruong.Service
             {
                 _action = $"Thêm loại cây trồng \"{request.Name}\"";
 
-                if (await _context.LoaiCayTrongs.AnyAsync(x => x.Name == request.Name))
+                if (await _context.LoaiCayTrong.AnyAsync(x => x.Name == request.Name))
                     return Result<int>.Error(_action, $"Loại cây trồng \"{request.Name}\" đã tồn tại");
 
-                int total = await _context.LoaiCayTrongs.CountAsync();
+                int total = await _context.LoaiCayTrong.CountAsync();
 
                 var obj = new LoaiCayTrong()
                 {
@@ -149,7 +149,7 @@ namespace TechLife.CSDLMoiTruong.Service
                     CreateOnDate = DateTime.Now,
                     LastModifiedOnDate = DateTime.Now,
                 };
-                _context.LoaiCayTrongs.Add(obj);
+                _context.LoaiCayTrong.Add(obj);
                 var result = await _context.SaveChangesAsync();
                 if (result > 0)
                     return Result<int>.Success(_action, obj.Id);
@@ -172,7 +172,7 @@ namespace TechLife.CSDLMoiTruong.Service
 
                     _action = $"Cập nhật thông tin loại cây trồng với Id: \"{id}\"";
 
-                    var obj = await _context.LoaiCayTrongs.FindAsync(id);
+                    var obj = await _context.LoaiCayTrong.FindAsync(id);
 
                     if (obj == null)
                         return Result<int>.Error(_action, "Không tìm thấy loại cây trồng cần sửa");
@@ -184,7 +184,7 @@ namespace TechLife.CSDLMoiTruong.Service
                     obj.Description = request.Description.TrimSpace();
                     obj.LastModifiedByUserId = null;
                     obj.LastModifiedOnDate = DateTime.Now;
-                    _context.LoaiCayTrongs.Update(obj);
+                    _context.LoaiCayTrong.Update(obj);
                     var result = await base.SaveChange();
 
                     if (result > 0)
@@ -211,7 +211,7 @@ namespace TechLife.CSDLMoiTruong.Service
 
                 _action = $"Xóa loại cây trồng với Id: \"{id}\"";
 
-                var obj = await _context.LoaiCayTrongs.FindAsync(id);
+                var obj = await _context.LoaiCayTrong.FindAsync(id);
                 if (obj == null)
                     return Result<int>.Error(_action, "Không tìm thấy loại cây trồng cần xóa", id);
 
@@ -220,7 +220,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 obj.IsDelete = true;
                 obj.LastModifiedByUserId = null;
                 obj.LastModifiedOnDate = DateTime.Now;
-                _context.LoaiCayTrongs.Update(obj);
+                _context.LoaiCayTrong.Update(obj);
 
                 var result = await base.SaveChange();
                 if (result > 0)
@@ -242,7 +242,7 @@ namespace TechLife.CSDLMoiTruong.Service
 
                 _action = $"Cập nhật vị trí hiển thị loại cây trồng với Id: \"{id}\"";
 
-                var obj = await _context.LoaiCayTrongs.FindAsync(id);
+                var obj = await _context.LoaiCayTrong.FindAsync(id);
 
                 if (obj == null)
                     return Result<int>.Error(_action, "Không tìm thấy loại cây trồng cần cập nhật");
@@ -252,7 +252,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 obj.Order = request.Value;
                 obj.LastModifiedByUserId = null;
                 obj.LastModifiedOnDate = DateTime.Now;
-                _context.LoaiCayTrongs.Update(obj);
+                _context.LoaiCayTrong.Update(obj);
 
                 var result = await base.SaveChange();
                 if (result > 0)
@@ -274,7 +274,7 @@ namespace TechLife.CSDLMoiTruong.Service
 
                 _action = $"Cập nhật trạng thái áp dụng loại cây trồng với Id: \"{id}\"";
 
-                var obj = await _context.LoaiCayTrongs.FindAsync(id);
+                var obj = await _context.LoaiCayTrong.FindAsync(id);
 
                 if (obj == null)
                     return Result<int>.Error(_action, "Không tìm thấy loại cây trồng cần cập nhật");
@@ -284,7 +284,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 obj.IsStatus = !obj.IsStatus;
                 obj.LastModifiedByUserId = null;
                 obj.LastModifiedOnDate = DateTime.Now;
-                _context.LoaiCayTrongs.Update(obj);
+                _context.LoaiCayTrong.Update(obj);
 
                 var result = await base.SaveChange();
                 if (result > 0)
