@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TechLife.CSDLMoiTruong.App.ApiClients;
 using TechLife.CSDLMoiTruong.App.Extensions;
+using TechLife.CSDLMoiTruong.Common.Enums;
 using TechLife.CSDLMoiTruong.Common.Result;
 
 namespace TechLife.CSDLMoiTruong.App.Controllers
@@ -107,6 +109,15 @@ namespace TechLife.CSDLMoiTruong.App.Controllers
             {
                 worksheet.Range(worksheet.Cell(rowStart, colStart), worksheet.Cell(rowEnd, colEnd)).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
             }
+        }
+
+        public List<SelectListItem> GetListMucDoNhiem(int id)
+        {
+            var listType = new List<SelectListItem>();
+            listType.Add(new SelectListItem() { Value = ((int)MucDoNhiem.nhe).ToString(), Text = StringEnum.GetStringValue(MucDoNhiem.nhe), Selected = id == (int)MucDoNhiem.nhe ? true : false });
+            listType.Add(new SelectListItem() { Value = ((int)MucDoNhiem.trungbinh).ToString(), Text = StringEnum.GetStringValue(MucDoNhiem.trungbinh), Selected = id == (int)MucDoNhiem.trungbinh ? true : false });
+            listType.Add(new SelectListItem() { Value = ((int)MucDoNhiem.nang).ToString(), Text = StringEnum.GetStringValue(MucDoNhiem.nang), Selected = id == (int)MucDoNhiem.nang ? true : false });
+            return listType;
         }
     }
 }

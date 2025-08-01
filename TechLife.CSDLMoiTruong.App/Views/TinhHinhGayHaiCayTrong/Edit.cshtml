@@ -1,0 +1,78 @@
+﻿@model TechLife.CSDLMoiTruong.Model.TinhHinhGayHaiCayTrong.TinhHinhGayHaiCayTrongUpdateRequest
+@using TechLife.CSDLMoiTruong.Common;
+<div class="modal-content">
+    <form id="modal-form" enctype="multipart/form-data">
+        <div class="modal-header">
+            <h4 class="modal-title">Sửa thông tin tình hình gây hại</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="TuNgay" class="form-label"></label>
+                        <input asp-for="TuNgay" type="date" class="form-control" autocomplete="off" />
+                        <span asp-validation-for="TuNgay" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="DenNgay" class="form-label"></label>
+                        <input asp-for="DenNgay" type="date" class="form-control" autocomplete="off" />
+                        <span asp-validation-for="DenNgay" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label asp-for="SinhVatGayHaiId" class="form-label"></label>
+                        <select asp-for="SinhVatGayHaiId" asp-items="@ViewBag.SinhVatGayHaiItems" class="form-select" style="width:100%">
+                            <option value="">Vui lòng chọn</option>
+                        </select>
+                        <span asp-validation-for="SinhVatGayHaiId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label asp-for="DiaBanId" class="form-label"></label>
+                        <select asp-for="DiaBanId" asp-items="@ViewBag.DiaBanItems" class="form-select" style="width:100%">
+                            <option value="">Vui lòng chọn</option>
+                        </select>
+                        <span asp-validation-for="DiaBanId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="MucDoNhiem" class="form-label"></label>
+                        <select asp-for="MucDoNhiem" asp-items="@ViewBag.MucDoNhiemItems" class="form-select" style="width:100%">
+                            <option value="">Vui lòng chọn</option>
+                        </select>
+                        <span asp-validation-for="MucDoNhiem" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="DienTichNhiem" class="form-label"></label>
+                        <input asp-for="DienTichNhiem" class="form-control" autocomplete="off" />
+                        <span asp-validation-for="DienTichNhiem" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <button type="button" data-bs-dismiss="modal" class="btn btn-secondary">Đóng</button>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+        </div>
+    </form>
+    @{
+        await Html.RenderPartialAsync("_ModalScript",
+        new TechLife.CSDLMoiTruong.App.Models.ModalFormRequest()
+            {
+                FormId = "modal-form",
+                UrlSubmit = "/TinhHinhGayHaiCayTrong/Edit",
+                UrlPathLoadData = Context.Request.Query["resultUrl"],
+                LoadDataId = "box-content"
+            });
+    }
+</div>

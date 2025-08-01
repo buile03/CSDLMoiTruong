@@ -1,0 +1,86 @@
+﻿@using TechLife.CSDLMoiTruong.App.Extensions
+@using TechLife.CSDLMoiTruong.Common;
+@using TechLife.CSDLMoiTruong.Common.Result;
+@model PagedResult<TechLife.CSDLMoiTruong.Model.TinhHinhGayHaiCayTrong.TinhHinhGayHaiCayTrongVm>
+<div class="box">
+    <div class="box-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th width="15%">Thời gian</th>
+                        <th>Sinh vật gây hại</th>
+                        <th>Địa bàn</th>
+                        <th width="10%">Mức độ</th>
+                        <th width="10%">Diện tích (ha)</th>
+                        <th width="15%">Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Items != null && Model.Items.Count() > 0)
+                    {
+                        int stt = 0;
+                        foreach (var d in Model.Items)
+                        {
+                            <tr>
+                                <td><strong>@(++stt). @d.TuNgay.ToString("dd/MM/yyyy") - @d.DenNgay.ToString("dd/MM/yyyy")</strong></td>
+                                <td>@d.SinhVatGayHaiName</td>
+                                <td>@d.DiaBanName</td>
+                                <td>@EnumHelper.GetStringValue(d.MucDoNhiem)</td>
+                                <td>@d.DienTichNhiem.ToString("N2")</td>
+                                <td class="text-center">
+                                    <a title="Sửa" data-link="@Context.Request.GetRawUrl()"
+                                       data-url="/TinhHinhGayHaiCayTrong/Edit/?id=@SystemFunctions.EncodeId(d.Id)"
+                                       data-toggle="modal" data-target="#modal" data-type="modal-lg"
+                                       class="btn btn-warning btn-sm popup">
+                                        <i class="fa fa-edit"></i> Sửa
+                                    </a>
+                                    <a title="Xóa" data-link="@Context.Request.GetRawUrl()"
+                                       data-url="/TinhHinhGayHaiCayTrong/Delete/?id=@SystemFunctions.EncodeId(d.Id)"
+                                       data-toggle="modal" data-target="#modal"
+                                       class="btn btn-danger btn-sm popup-delete">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i> Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="text-center align-middle" colspan="6"><em>Không có kết quả.</em></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @if (Model.TotalRecords > Model.PageSize)
+    {
+        <div class="box-footer clearfix">
+            <div class="card-footer">
+                @await Component.InvokeAsync("Paging", new { page = Model })
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    $(".popup-delete").on("click", function () {
+        var url = $(this).data("url");
+        var id = $(this).data("id");
+        var urlBack = $(this).data("link");
+        $.SmartMessageBox({
+            title: "Thông báo!",
+            content: "Bạn muốn xóa bản ghi này?",
+            buttons: '[Đóng][Xác nhận]'
+        }, function (ButtonPressed) {
+            if (ButtonPressed === "Xác nhận") {
+                DeleteData(url, id, function () {
+                    let element = document.getElementById('box-content');
+                    loadContent(urlBack, element);
+                });
+            }
+        });
+    });
+</script>

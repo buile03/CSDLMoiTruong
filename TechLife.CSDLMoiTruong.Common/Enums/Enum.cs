@@ -32,6 +32,13 @@ namespace TechLife.CSDLMoiTruong.Common.Enums
         [StringValue(@"SSO Cơ quan/Tổ chức")]
         SSOOrganHueS
     }
-
-    
+    public enum MucDoNhiem : int
+    {
+        [StringValue(@"Mức độ nhẹ")]
+        nhe = 1,
+        [StringValue(@"Mức độ trung bình")]
+        trungbinh = 2,
+        [StringValue(@"Mức độ nặng")]
+        nang = 3
+    }
 }

@@ -11,6 +11,7 @@ namespace TechLife.CSDLMoiTruong.App.Extensions
             services.AddTransient<IDiaBanAnhHuongService, DiaBanAnhHuongService>();
             services.AddTransient<IThoiTietService, ThoiTietService>();
             services.AddTransient<ISoLieuSinhTruongService, SoLieuSinhTruongService>();
+            services.AddTransient<ITinhHinhGayHaiCayTrongService, TinhHinhGayHaiCayTrongService>();
 
             return services;
         }
