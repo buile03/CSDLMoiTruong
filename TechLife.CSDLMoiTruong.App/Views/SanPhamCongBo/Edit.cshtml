@@ -1,0 +1,75 @@
+﻿@model TechLife.CSDLMoiTruong.Model.SanPhamCongBo.SanPhamCongBoUpdateRequest
+@using TechLife.CSDLMoiTruong.Common;
+<div class="modal-content">
+    <form id="modal-form" enctype="multipart/form-data">
+        <div class="modal-header">
+            <h4 class="modal-title">Sửa thông tin sản phẩm tự công bố</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label"></label> <span class="text-danger">(*)</span>
+                        <input asp-for="Name" class="form-control" autocomplete="off" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label asp-for="Code" class="form-label"></label>
+                        <input asp-for="Code" class="form-control" autocomplete="off" />
+                        <span asp-validation-for="Code" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label asp-for="DonViCongBoId" class="form-label"></label> <span class="text-danger">(*)</span>
+                        <select asp-for="DonViCongBoId" asp-items="ViewBag.DonViCongBoItems" class="form-select">
+                            <option value="0">-- Chọn đơn vị --</option>
+                        </select>
+                        <span asp-validation-for="DonViCongBoId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label asp-for="SoCongBo" class="form-label"></label> <span class="text-danger">(*)</span>
+                        <input asp-for="SoCongBo" class="form-control" autocomplete="off" />
+                        <span asp-validation-for="SoCongBo" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label asp-for="NgayCongBo" class="form-label"></label> <span class="text-danger">(*)</span>
+                        <input asp-for="NgayCongBo" type="date" class="form-control" autocomplete="off" />
+                        <span asp-validation-for="NgayCongBo" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" class="form-control" autocomplete="off"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <button type="button" data-bs-dismiss="modal" class="btn btn-secondary">Đóng</button>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+        </div>
+    </form>
+    @{
+        await Html.RenderPartialAsync("_ModalScript",
+        new TechLife.CSDLMoiTruong.App.Models.ModalFormRequest()
+            {
+                FormId = "modal-form",
+                UrlSubmit = "/SanPhamCongBo/Edit",
+                UrlPathLoadData = Context.Request.Query["resultUrl"],
+                LoadDataId = "box-content"
+            });
+    }
+</div>

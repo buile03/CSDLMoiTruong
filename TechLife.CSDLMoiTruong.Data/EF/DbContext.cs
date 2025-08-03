@@ -25,6 +25,7 @@ namespace TechLife.CSDLMoiTruong.Data.EF
         public DbSet<SoLieuSinhTruong> SoLieuSinhTruong { get; set; }
         public DbSet<TinhHinhGayHaiCayTrong> TinhHinhGayHaiCayTrong { get; set; }
         public DbSet<DonViCongBo> DonViCongBo { get; set; }
+        public DbSet<SanPhamCongBo> SanPhamCongBo { get; set; }
 
 
     }

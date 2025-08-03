@@ -13,6 +13,7 @@ namespace TechLife.CSDLMoiTruong.App.Extensions
             services.AddTransient<ISoLieuSinhTruongService, SoLieuSinhTruongService>();
             services.AddTransient<ITinhHinhGayHaiCayTrongService, TinhHinhGayHaiCayTrongService>();
             services.AddTransient<IDonViCongBoService, DonViCongBoService>();
+            services.AddTransient<ISanPhamCongBoService, SanPhamCongBoService>();
 
             return services;
         }

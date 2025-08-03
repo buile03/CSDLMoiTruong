@@ -1,0 +1,96 @@
+﻿@using TechLife.CSDLMoiTruong.App.Extensions
+@model TechLife.CSDLMoiTruong.Model.SanPhamCongBo.SanPhamCongBoGetPagingRequest
+@{
+    ViewData["Title"] = "Danh sách sản phẩm tự công bố";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section id="widget-grid">
+    <div class="row">
+        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="jarviswidget" id="wid-id-groups" data-widget-colorbutton="false"
+                 data-widget-deletebutton="false"
+                 data-widget-editbutton="false">
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-cubes"></i> </span>
+                    <h2>@ViewData["Title"]</h2>
+                </header>
+                <div>
+                    <div class="widget-body">
+                        <form method="get">
+                            <div class="padding-bottom-10">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Từ khóa tìm kiếm:</label>
+                                        <div class="input-group input-group-sm">
+                                            <input class="form-control" asp-for="Keyword" autocomplete="off" placeholder="Nhập từ khóa tìm kiếm...">
+                                            <button class="btn btn-primary" type="submit">
+                                                <i class="fa fa-search" aria-hidden="true"></i>
+                                                Tìm kiếm
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Đơn vị công bố:</label>
+                                        <select class="form-select form-select-sm" asp-for="DonViCongBoId" asp-items="@ViewBag.DonViCongBoItems">
+                                            <option value="0">Chọn đơn vị công bố</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 text-right">
+                                        <button type="button" title="Thêm sản phẩm" data-link="@Context.Request.GetRawUrl("/SanPhamCongBo/List/")" data-url="/SanPhamCongBo/Create/" data-toggle="modal" data-target="#modal" class="btn btn-success btn-sm popup"><i class="fa fa-plus-circle"></i> Thêm mới</button>
+                                        <button type="button" title="Import Excel" data-link="@Context.Request.GetRawUrl("/SanPhamCongBo/List/")" data-url="/SanPhamCongBo/ImportExcel/" data-toggle="modal" data-target="#modal" class="btn btn-info btn-sm popup"><i class="fa fa-upload"></i> Import</button>
+                                        <button type="button" title="Export Excel" onclick="exportExcel()" class="btn btn-warning btn-sm"><i class="fa fa-download"></i> Export</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="box-content">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let element = document.getElementById('box-content');
+            loadContent('@Html.Raw(Context.Request.GetRawUrl("/SanPhamCongBo/List/"))', element);
+            $("#DonViCongBoId").on("change", function () {
+                this.form.submit()
+            });
+            pageSetUp();
+        });
+        function exportExcel() {
+            var donViId = $('#DonViCongBoId').val();
+            var keyword = $('#Keyword').val();
+
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/SanPhamCongBo/ExportExcel';
+
+            var inputDonVi = document.createElement('input');
+            inputDonVi.type = 'hidden';
+            inputDonVi.name = 'DonViCongBoId';
+            inputDonVi.value = donViId;
+            form.appendChild(inputDonVi);
+
+            var inputKeyword = document.createElement('input');
+            inputKeyword.type = 'hidden';
+            inputKeyword.name = 'Keyword';
+            inputKeyword.value = keyword;
+            form.appendChild(inputKeyword);
+
+            var token = document.createElement('input');
+            token.type = 'hidden';
+            token.name = '__RequestVerificationToken';
+            token.value = $('input[name="__RequestVerificationToken"]').val();
+            form.appendChild(token);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+}
