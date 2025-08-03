@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TechLife.CSDLMoiTruong.Data.EF;
 
@@ -11,9 +12,11 @@ using TechLife.CSDLMoiTruong.Data.EF;
 namespace TechLife.CSDLMoiTruong.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250803050106_CreateTableDonViCongBo")]
+    partial class CreateTableDonViCongBo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,61 +74,6 @@ namespace TechLife.CSDLMoiTruong.Data.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("DiaBanAnhHuong");
-                });
-
-            modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.DonViCongBo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("CreateByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("CreateOnDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DiaChi")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsStatus")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("LastModifiedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("LastModifiedOnDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OrganId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SoDienThoai")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DonViCongBo");
                 });
 
             modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.LoaiCayTrong", b =>

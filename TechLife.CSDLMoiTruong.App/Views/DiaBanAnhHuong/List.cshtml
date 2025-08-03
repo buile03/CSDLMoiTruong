@@ -9,7 +9,7 @@
                 <thead>
                     <tr>
                         <th>Tên địa bàn</th>
-                        <th>Địa bàn cha</th>
+                        @* <th>Địa bàn cha</th> *@
                         <th width="10%" class="text-center">Vị trí</th>
                         <th width="10%" class="text-center">Áp dụng</th>
                         <th width="20%" class="text-center">Chức năng</th>
@@ -21,32 +21,13 @@
                         foreach (var d in Model.Items)
                         {
                             <tr>
-                                <td class="align-middle"><span>@d.Name</span></td>
-                                <td class="align-middle"><span>@d.ParentName</span></td>
+                                <td class="align-middle"><strong>@d.Name</strong></td>
+                               @*  <td class="align-middle"><span>@d.ParentName</span></td> *@
+                                <td class="text-center align-middle"><input type="number" min="1" value="@d.Order" data-url="/DiaBanAnhHuong/UpdateOrder/" data-id="@SystemFunctions.EncodeId(d.Id)" class="form-control form-control-sm txtOrder text-right" /></td>
+                                <td class="text-center align-middle"><input type="checkbox" data-url="/DiaBanAnhHuong/UpdateStatus/" data-id="@SystemFunctions.EncodeId(d.Id)" class="chStatus" checked="@d.IsStatus" /></td>
                                 <td class="text-center align-middle">
-                                    <input type="number" min="1" value="@d.Order"
-                                           data-url="/DiaBanAnhHuong/UpdateOrder/"
-                                           data-id="@SystemFunctions.EncodeId(d.Id)"
-                                           class="form-control form-control-sm txtOrder text-right" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input type="checkbox" data-url="/DiaBanAnhHuong/UpdateStatus/"
-                                           data-id="@SystemFunctions.EncodeId(d.Id)"
-                                           class="chStatus" checked="@d.IsStatus" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <a title="Sửa" data-link="@Context.Request.GetRawUrl()"
-                                       data-url="/DiaBanAnhHuong/Edit/?id=@SystemFunctions.EncodeId(d.Id)"
-                                       data-toggle="modal" data-target="#modal"
-                                       class="btn btn-warning btn-sm popup">
-                                        <i class="fa fa-edit"></i> Sửa
-                                    </a>
-                                    <a title="Xóa" data-link="@Context.Request.GetRawUrl()"
-                                       data-url="/DiaBanAnhHuong/Delete/?id=@SystemFunctions.EncodeId(d.Id)"
-                                       data-toggle="modal" data-target="#modal"
-                                       class="btn btn-danger btn-sm popup-delete">
-                                        <i class="fa fa-trash-o" aria-hidden="true"></i> Xóa
-                                    </a>
+                                    <a title="Sửa" data-link="@Context.Request.GetRawUrl()" data-url="/DiaBanAnhHuong/Edit/?id=@SystemFunctions.EncodeId(d.Id)" data-toggle="modal" data-target="#modal" class="btn btn-warning btn-sm popup"><i class="fa fa-edit"></i> Sửa</a> 
+                                    <a title="Xóa" data-link="@Context.Request.GetRawUrl()" data-url="/DiaBanAnhHuong/Delete/?id=@SystemFunctions.EncodeId(d.Id)" data-toggle="modal" data-target="#modal" class="btn btn-danger btn-sm popup-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Xóa</a>
                                 </td>
                             </tr>
                         }
