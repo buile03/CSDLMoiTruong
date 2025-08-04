@@ -26,7 +26,7 @@ namespace TechLife.CSDLMoiTruong.App.Component
                 new MenuViewModel { Name = StringEnum.GetStringValue(HeThong.home), Module = HeThong.home.ToString(), Url = "/", Icon = "fa-home" },
                 new MenuViewModel { Name = StringEnum.GetStringValue(HeThong.sinhvatgayhai), Module = HeThong.sinhvatgayhai.ToString(), Icon = "fa-bug" },
                 new MenuViewModel { Name = StringEnum.GetStringValue(HeThong.thoitietvasinhtruong), Module = HeThong.thoitietvasinhtruong.ToString(), Icon = "fa-cloud" },
-                new MenuViewModel { Name = StringEnum.GetStringValue(HeThong.chatluongsanpham), Module = HeThong.chatluongsanpham.ToString(), Icon = "fa-star" },
+                new MenuViewModel { Name = StringEnum.GetStringValue(HeThong.chatluongsanpham), Module = HeThong.chatluongsanpham.ToString(), Icon = "fa-certificate" },
                 new MenuViewModel { Name = StringEnum.GetStringValue(HeThong.cosogiongcaytrong), Module = HeThong.cosogiongcaytrong.ToString(), Icon = "fa-leaf" }
             };
 
@@ -35,34 +35,33 @@ namespace TechLife.CSDLMoiTruong.App.Component
             {
                 menus.AddRange(new List<MenuViewModel>
                 {
-                    new MenuViewModel { Name = "Loại cây trồng", Url = "/LoaiCayTrong", Icon = "fa-leaf", Module = HeThong.sinhvatgayhai.ToString() },
+                    new MenuViewModel { Name = "Loại cây trồng", Url = "/LoaiCayTrong", Icon = "fa-tree", Module = HeThong.sinhvatgayhai.ToString() },
                     new MenuViewModel { Name = "Sinh vật gây hại", Url = "/SinhVatGayHai", Icon = "fa-bug", Module = HeThong.sinhvatgayhai.ToString() },
-                    new MenuViewModel { Name = "Địa bàn ảnh hưởng", Url = "/DiaBanAnhHuong", Icon = "fa-map", Module = HeThong.sinhvatgayhai.ToString() },
-                    new MenuViewModel { Name = "Tình hình gây hại cây trồng", Url = "/TinhHinhGayHaiCayTrong", Icon = "fa-map", Module = HeThong.sinhvatgayhai.ToString() },
+                    new MenuViewModel { Name = "Địa bàn ảnh hưởng", Url = "/DiaBanAnhHuong", Icon = "fa-map-marker", Module = HeThong.sinhvatgayhai.ToString() },
+                    new MenuViewModel { Name = "Tình hình gây hại cây trồng", Url = "/TinhHinhGayHaiCayTrong", Icon = "fa-line-chart", Module = HeThong.sinhvatgayhai.ToString() },
                 });
 
-                        menus.AddRange(new List<MenuViewModel>
+                menus.AddRange(new List<MenuViewModel>
                 {
                     new MenuViewModel { Name = "Thời tiết", Url = "/ThoiTiet", Icon = "fa-cloud", Module = HeThong.thoitietvasinhtruong.ToString() },
-                    new MenuViewModel { Name = "Số liệu sinh trưởng", Url = "/SoLieuSinhTruong", Icon = "fa-leaf", Module = HeThong.thoitietvasinhtruong.ToString() }
+                    new MenuViewModel { Name = "Số liệu sinh trưởng", Url = "/SoLieuSinhTruong", Icon = "fa-bar-chart", Module = HeThong.thoitietvasinhtruong.ToString() }
                 });
 
-                        menus.AddRange(new List<MenuViewModel>
+                menus.AddRange(new List<MenuViewModel>
                 {
-                    new MenuViewModel { Name = "Đơn vị công bố", Url = "/DonViCongBo", Icon = "fa-building", Module = HeThong.chatluongsanpham.ToString() },
+                    new MenuViewModel { Name = "Đơn vị công bố", Url = "/DonViCongBo", Icon = "fa-institution", Module = HeThong.chatluongsanpham.ToString() },
                     new MenuViewModel { Name = "Sản phẩm công bố", Url = "/SanPhamCongBo", Icon = "fa-cube", Module = HeThong.chatluongsanpham.ToString() }
                 });
 
-                        menus.AddRange(new List<MenuViewModel>
+                menus.AddRange(new List<MenuViewModel>
                 {
-                    //new MenuViewModel { Name = "Giống cây trồng", Url = "/GiongCayTrong", Icon = "fa-leaf", Module = HeThong.cosogiongcaytrong.ToString() },
-                    new MenuViewModel { Name = "Cơ sở sản xuất giống", Url = "/CoSoSanXuat", Icon = "fa-building", Module = HeThong.cosogiongcaytrong.ToString() }
+                    new MenuViewModel { Name = "Cơ sở sản xuất giống", Url = "/CoSoSanXuat", Icon = "fa-industry", Module = HeThong.cosogiongcaytrong.ToString() }
                 });
 
-                        menus.AddRange(new List<MenuViewModel>
+                menus.AddRange(new List<MenuViewModel>
                 {
                     new MenuViewModel { Name = "Tài khoản", Url = "/TaiKhoan", Icon = "fa-users", Module = HeThong.hethong.ToString() },
-                    new MenuViewModel { Name = "Quyền", Url = "/Quyen", Icon = "fa-cogs", Module = HeThong.hethong.ToString() },
+                    new MenuViewModel { Name = "Quyền", Url = "/Quyen", Icon = "fa-key", Module = HeThong.hethong.ToString() },
                     new MenuViewModel { Name = "Nhật ký hệ thống", Url = "/NhatKyHeThong", Icon = "fa-history", Module = HeThong.hethong.ToString() }
                 });
             }
