@@ -19,7 +19,7 @@
                         <form method="get">
                             <div class="padding-bottom-10">
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-5">
                                         <label class="form-label">Từ khóa tìm kiếm:</label>
                                         <div class="input-group input-group-sm">
                                             <input class="form-control" asp-for="Keyword" autocomplete="off" placeholder="Nhập từ khóa tìm kiếm...">
@@ -35,7 +35,7 @@
                                             <option value="0">Chọn đơn vị công bố</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-6 text-right">
+                                    <div class="col-md-4 text-right">
                                         <button type="button" title="Thêm sản phẩm" data-link="@Context.Request.GetRawUrl("/SanPhamCongBo/List/")" data-url="/SanPhamCongBo/Create/" data-toggle="modal" data-target="#modal" class="btn btn-success btn-sm popup"><i class="fa fa-plus-circle"></i> Thêm mới</button>
                                         <button type="button" title="Import Excel" data-link="@Context.Request.GetRawUrl("/SanPhamCongBo/List/")" data-url="/SanPhamCongBo/ImportExcel/" data-toggle="modal" data-target="#modal" class="btn btn-info btn-sm popup"><i class="fa fa-upload"></i> Import</button>
                                         <button type="button" title="Export Excel" onclick="exportExcel()" class="btn btn-warning btn-sm"><i class="fa fa-download"></i> Export</button>
@@ -66,6 +66,10 @@
         function exportExcel() {
             var donViId = $('#DonViCongBoId').val();
             var keyword = $('#Keyword').val();
+            
+            if (donViId === "0") {
+            donViId = null;
+            }
 
             var form = document.createElement('form');
             form.method = 'POST';

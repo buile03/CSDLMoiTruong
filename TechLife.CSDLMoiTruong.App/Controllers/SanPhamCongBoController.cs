@@ -193,6 +193,17 @@ namespace TechLife.CSDLMoiTruong.App.Controllers
                 return ErrorResult();
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> ImportExcel()
+        {
+            var listDonViCongBo = await _donViCongBoService.GetAll();
+            ViewBag.DonViCongBoItems = listDonViCongBo.Select(v => new SelectListItem()
+            {
+                Text = v.Name,
+                Value = v.Id.ToString(),
+            }).ToList();
+            return PartialView();
+        }
 
         [HttpPost]
         public async Task<IActionResult> ImportExcel(ImportExcelRequest request)
@@ -211,18 +222,7 @@ namespace TechLife.CSDLMoiTruong.App.Controllers
                 return ErrorResult();
             }
         }
-        [HttpGet]
-        public async Task<IActionResult> ImportExcel()
-        {
-            var listDonViCongBo = await _donViCongBoService.GetAll();
-            ViewBag.DonViCongBoItems = listDonViCongBo.Select(v => new SelectListItem()
-            {
-                Text = v.Name,
-                Value = v.Id.ToString(),
-            }).ToList();
-            return PartialView();
-        }
-
+        
         [HttpPost]
         public async Task<IActionResult> ExportExcel(ExportExcelRequest request)
         {

@@ -323,23 +323,23 @@ namespace TechLife.CSDLMoiTruong.Service
                 {
                     await request.File.CopyToAsync(stream);
 
-                    using (var package = new ExcelPackage(stream))
+                    using (var workbook = new XLWorkbook(stream))
                     {
-                        var worksheet = package.Workbook.Worksheets[0];
-                        var rowCount = worksheet.Dimension.Rows;
+                        var worksheet = workbook.Worksheet(1);
+                        var rowCount = worksheet.RowsUsed().Count();
 
-                        for (int row = 2; row <= rowCount; row++) // Bỏ qua header
+                        for (int row = 2; row <= rowCount; row++) 
                         {
                             try
                             {
                                 var sanPham = new SanPhamCongBo
                                 {
-                                    Name = worksheet.Cells[row, 1].Value?.ToString().Trim(),
-                                    Code = worksheet.Cells[row, 2].Value?.ToString().Trim(),
+                                    Name = worksheet.Cell(row, 1).GetString().Trim(),
+                                    Code = worksheet.Cell(row, 2).GetString().Trim(),
                                     DonViCongBoId = request.DonViCongBoId,
-                                    SoCongBo = worksheet.Cells[row, 3].Value?.ToString().Trim(),
-                                    NgayCongBo = DateTime.Parse(worksheet.Cells[row, 4].Value?.ToString()),
-                                    Description = worksheet.Cells[row, 5].Value?.ToString().Trim(),
+                                    SoCongBo = worksheet.Cell(row, 3).GetString().Trim(),
+                                    NgayCongBo = DateTime.Parse(worksheet.Cell(row, 4).GetString()),
+                                    Description = worksheet.Cell(row, 5).GetString().Trim(),
                                     Order = 1,
                                     IsStatus = true,
                                     IsDelete = false,
@@ -378,7 +378,7 @@ namespace TechLife.CSDLMoiTruong.Service
                 var query = from sp in _context.SanPhamCongBo
                             join dv in _context.DonViCongBo on sp.DonViCongBoId equals dv.Id
                             where !sp.IsDelete
-                            && (request.DonViCongBoId == null || sp.DonViCongBoId == request.DonViCongBoId)
+                            && (request.DonViCongBoId == null || request.DonViCongBoId == 0 || sp.DonViCongBoId == request.DonViCongBoId)
                             && (request.Ids == null || request.Ids.Contains(sp.Id))
                             && (string.IsNullOrEmpty(request.Keyword) ||
                                (sp.Description.Contains(request.Keyword) ||
