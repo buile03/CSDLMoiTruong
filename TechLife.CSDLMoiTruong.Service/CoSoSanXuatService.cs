@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ClosedXML.Excel;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +24,8 @@ namespace TechLife.CSDLMoiTruong.Service
         Task<Result<int>> Delete(DeleteRequest request);
         Task<Result<int>> UpdateStatus(UpdateStatusRequest request);
         Task<Result<int>> UpdateOrder(UpdateOrderRequest request);
+        Task<Result<int>> ImportExcel(ImportExcelRequest request);
+        Task<FileResult> ExportExcel(ExportExcelRequest request);
     }
 
     public class CoSoSanXuatService : BaseService, ICoSoSanXuatService
@@ -303,6 +307,151 @@ namespace TechLife.CSDLMoiTruong.Service
                 return Result<int>.Error(_action, id);
             }
             catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<Result<int>> ImportExcel(ImportExcelRequest request)
+        {
+            try
+            {
+                _action = "Import danh sách cơ sở sản xuất từ Excel";
+
+                if (request.File == null || request.File.Length == 0)
+                    return Result<int>.Error(_action, "Vui lòng chọn file Excel");
+
+                var listCoSo = new List<CoSoSanXuat>();
+
+                using (var stream = new MemoryStream())
+                {
+                    await request.File.CopyToAsync(stream);
+
+                    using (var workbook = new XLWorkbook(stream))
+                    {
+                        var worksheet = workbook.Worksheet(1);
+                        var rowCount = worksheet.RowsUsed().Count();
+
+                        for (int row = 2; row <= rowCount; row++)
+                        {
+                            try
+                            {
+                                var coSo = new CoSoSanXuat
+                                {
+                                    Name = worksheet.Cell(row, 1).GetString().Trim(),
+                                    Code = worksheet.Cell(row, 2).GetString().Trim() ?? "",
+                                    DiaChi = worksheet.Cell(row, 3).GetString().Trim() ?? "",
+                                    DienThoai = worksheet.Cell(row, 4).GetString().Trim() ?? "",
+                                    Email = worksheet.Cell(row, 5).GetString().Trim() ?? "",
+                                    ChuCoSo = worksheet.Cell(row, 6).GetString().Trim() ?? "",
+                                    MaSoThue = worksheet.Cell(row, 7).GetString().Trim() ?? "",
+                                    GhiChu = worksheet.Cell(row, 8).GetString().Trim() ?? "",
+                                    Order = 1,
+                                    IsStatus = true,
+                                    IsDelete = false,
+                                    CreateOnDate = DateTime.Now,
+                                    LastModifiedOnDate = DateTime.Now
+                                };
+
+                                listCoSo.Add(coSo);
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                }
+
+                if (listCoSo.Count == 0)
+                    return Result<int>.Error(_action, "Không có dữ liệu hợp lệ để import");
+
+                await _context.CoSoSanXuat.AddRangeAsync(listCoSo);
+                var result = await _context.SaveChangesAsync();
+
+                return Result<int>.Success(_action, result);
+            }
+            catch (Exception ex)
+            {
+                return Result<int>.Error(_action, ex.Message);
+            }
+        }
+
+        public async Task<FileResult> ExportExcel(ExportExcelRequest request)
+        {
+            try
+            {
+                var query = from cs in _context.CoSoSanXuat
+                            where !cs.IsDelete
+                            && (string.IsNullOrEmpty(request.Keyword) ||
+                               (cs.DiaChi.Contains(request.Keyword) ||
+                                cs.Name.Contains(request.Keyword) ||
+                                cs.Code.Contains(request.Keyword) ||
+                                cs.DienThoai.Contains(request.Keyword)))
+                            select new CoSoSanXuatVm()
+                    {
+                        Id = cs.Id,
+                        Name = cs.Name,
+                        Code = cs.Code,
+                        DiaChi = cs.DiaChi,
+                        DienThoai = cs.DienThoai,
+                        Email = cs.Email,
+                        ChuCoSo = cs.ChuCoSo,
+                        MaSoThue = cs.MaSoThue,
+                        GhiChu = cs.GhiChu,
+                        Order = cs.Order,
+                        IsStatus = cs.IsStatus,
+                    };
+
+                var data = await query.ToListAsync();
+
+                using (var workbook = new XLWorkbook())
+                {
+                    var worksheet = workbook.Worksheets.Add("CoSoSanXuat");
+
+                    // Header
+                    worksheet.Cell(1, 1).Value = "Tên cơ sở";
+                    worksheet.Cell(1, 2).Value = "Mã cơ sở";
+                    worksheet.Cell(1, 3).Value = "Địa chỉ";
+                    worksheet.Cell(1, 4).Value = "Điện thoại";
+                    worksheet.Cell(1, 5).Value = "Email";
+                    worksheet.Cell(1, 6).Value = "Chủ cơ sở";
+                    worksheet.Cell(1, 7).Value = "Mã số thuế";
+                    worksheet.Cell(1, 8).Value = "Ghi chú";
+
+                    var headerRange = worksheet.Range(1, 1, 1, 8);
+                    headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
+                    headerRange.Style.Font.Bold = true;
+
+                    // Data
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        var row = i + 2;
+                        worksheet.Cell(row, 1).Value = data[i].Name;
+                        worksheet.Cell(row, 2).Value = data[i].Code;
+                        worksheet.Cell(row, 3).Value = data[i].DiaChi;
+                        worksheet.Cell(row, 4).Value = data[i].DienThoai;
+                        worksheet.Cell(row, 5).Value = data[i].Email;
+                        worksheet.Cell(row, 6).Value = data[i].ChuCoSo;
+                        worksheet.Cell(row, 7).Value = data[i].MaSoThue;
+                        worksheet.Cell(row, 8).Value = data[i].GhiChu;
+                    }
+
+                    worksheet.Columns().AdjustToContents();
+
+                    using (var stream = new MemoryStream())
+                    {
+                        workbook.SaveAs(stream);
+                        var content = stream.ToArray();
+                        return new FileContentResult(content,
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                        {
+                            FileDownloadName = $"CoSoSanXuat_{DateTime.Now:yyyyMMddHHmmss}.xlsx"
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
             {
                 throw;
             }
