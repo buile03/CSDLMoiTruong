@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ClosedXML.Excel;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +24,8 @@ namespace TechLife.CSDLMoiTruong.Service
         Task<Result<int>> Delete(DeleteRequest request);
         Task<Result<int>> UpdateStatus(UpdateStatusRequest request);
         Task<Result<int>> UpdateOrder(UpdateOrderRequest request);
+        Task<Result<int>> ImportExcel(ImportExcelRequest request);
+        Task<FileResult> ExportExcel(ExportExcelRequest request);
     }
 
     public class SoLieuSinhTruongService : BaseService, ISoLieuSinhTruongService
@@ -37,9 +41,10 @@ namespace TechLife.CSDLMoiTruong.Service
             try
             {
                 var query = from s in _context.SoLieuSinhTruong
-                            join c in _context.LoaiCayTrong on s.CayTrongId equals c.Id
+                            join c in _context.LoaiCayTrong on s.CayTrongId equals c.Id into ctGroup
+                            from c in ctGroup.DefaultIfEmpty()
                             where !s.IsDelete
-                            && (request.CayTrongId == null || s.CayTrongId == request.CayTrongId)
+                            && (request.CayTrongId == null || request.CayTrongId == 0 || s.CayTrongId == request.CayTrongId)
                             && (string.IsNullOrEmpty(request.Keyword) || s.MoTa.Contains(request.Keyword))
                             select new SoLieuSinhTruongVm()
                             {
@@ -295,6 +300,142 @@ namespace TechLife.CSDLMoiTruong.Service
                 return Result<int>.Error(_action, id);
             }
             catch
+            {
+                throw;
+            }
+        }
+        public async Task<Result<int>> ImportExcel(ImportExcelRequest request)
+        {
+            try
+            {
+                _action = "Import danh sách số liệu sinh trưởng từ Excel";
+
+                if (request.File == null || request.File.Length == 0)
+                    return Result<int>.Error(_action, "Vui lòng chọn file Excel");
+
+                var listSoLieu = new List<SoLieuSinhTruong>();
+
+                using (var stream = new MemoryStream())
+                {
+                    await request.File.CopyToAsync(stream);
+
+                    using (var workbook = new XLWorkbook(stream))
+                    {
+                        var worksheet = workbook.Worksheet(1);
+                        var rowCount = worksheet.RowsUsed().Count();
+
+                        for (int row = 2; row <= rowCount; row++)
+                        {
+                            try
+                            {
+                                var soLieu = new SoLieuSinhTruong
+                                {
+                                    CayTrongId = request.CayTrongId,
+                                    TuNgay = DateTime.Parse(worksheet.Cell(row, 1).GetString().Trim()),
+                                    DenNgay = DateTime.Parse(worksheet.Cell(row, 2).GetString().Trim()),
+                                    KeHoach = worksheet.Cell(row, 3).GetValue<double>(),
+                                    DaGieoTrong = worksheet.Cell(row, 4).GetValue<double>(),
+                                    MoTa = worksheet.Cell(row, 5).GetString().Trim() ?? "",
+                                    Order = 1,
+                                    IsStatus = true,
+                                    IsDelete = false,
+                                    CreateOnDate = DateTime.Now,
+                                    LastModifiedOnDate = DateTime.Now
+                                };
+
+                                listSoLieu.Add(soLieu);
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                }
+
+                if (listSoLieu.Count == 0)
+                    return Result<int>.Error(_action, "Không có dữ liệu hợp lệ để import");
+
+                await _context.SoLieuSinhTruong.AddRangeAsync(listSoLieu);
+                var result = await _context.SaveChangesAsync();
+
+                return Result<int>.Success(_action, result);
+            }
+            catch (Exception ex)
+            {
+                return Result<int>.Error(_action, ex.Message);
+            }
+        }
+
+        public async Task<FileResult> ExportExcel(ExportExcelRequest request)
+        {
+            try
+            {
+                var query = from s in _context.SoLieuSinhTruong
+                            join c in _context.LoaiCayTrong on s.CayTrongId equals c.Id
+                            where !s.IsDelete
+                            && (request.CayTrongId == null || request.CayTrongId == 0 || s.CayTrongId == request.CayTrongId)
+                            && (request.Ids == null || request.Ids.Contains(s.Id))
+                            && (string.IsNullOrEmpty(request.Keyword) || s.MoTa.Contains(request.Keyword))
+                            select new SoLieuSinhTruongVm()
+                            {
+                                Id = s.Id,
+                                CayTrongId = s.CayTrongId,
+                                TenCayTrong = c.Name,
+                                TuNgay = s.TuNgay,
+                                DenNgay = s.DenNgay,
+                                KeHoach = s.KeHoach,
+                                DaGieoTrong = s.DaGieoTrong,
+                                MoTa = s.MoTa,
+                                Order = s.Order,
+                                IsStatus = s.IsStatus,
+                            };
+
+                var data = await query.ToListAsync();
+
+                using (var workbook = new XLWorkbook())
+                {
+                    var worksheet = workbook.Worksheets.Add("SoLieuSinhTruong");
+
+                    // Add headers
+                    worksheet.Cell(1, 1).Value = "Loại cây trồng";
+                    worksheet.Cell(1, 2).Value = "Từ ngày";
+                    worksheet.Cell(1, 3).Value = "Đến ngày";
+                    worksheet.Cell(1, 4).Value = "Kế hoạch";
+                    worksheet.Cell(1, 5).Value = "Đã gieo trồng";
+                    worksheet.Cell(1, 6).Value = "Mô tả";
+
+                    var headerRange = worksheet.Range(1, 1, 1, 6);
+                    headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
+                    headerRange.Style.Font.Bold = true;
+
+                    // Add data
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        var row = i + 2;
+                        worksheet.Cell(row, 1).Value = data[i].TenCayTrong;
+                        worksheet.Cell(row, 2).Value = data[i].TuNgay.ToString("dd/MM/yyyy");
+                        worksheet.Cell(row, 3).Value = data[i].DenNgay.ToString("dd/MM/yyyy");
+                        worksheet.Cell(row, 4).Value = data[i].KeHoach;
+                        worksheet.Cell(row, 5).Value = data[i].DaGieoTrong;
+                        worksheet.Cell(row, 6).Value = data[i].MoTa;
+                    }
+
+                    worksheet.Columns().AdjustToContents();
+
+                    using (var stream = new MemoryStream())
+                    {
+                        workbook.SaveAs(stream);
+                        var content = stream.ToArray();
+                        return new FileContentResult(content,
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                        {
+                            FileDownloadName = $"SoLieuSinhTruong_{DateTime.Now:yyyyMMddHHmmss}.xlsx"
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
             {
                 throw;
             }

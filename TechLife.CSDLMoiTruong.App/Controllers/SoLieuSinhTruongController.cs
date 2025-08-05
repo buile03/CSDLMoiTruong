@@ -203,5 +203,49 @@ namespace TechLife.CSDLMoiTruong.App.Controllers
                 return ErrorResult();
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> ImportExcel()
+        {
+            var listLoaiCayTrong = await _loaiCayTrongService.GetAll();
+            ViewBag.LoaiCayTrongItems = listLoaiCayTrong.Select(v => new SelectListItem()
+            {
+                Text = v.Name,
+                Value = v.Id.ToString(),
+            }).ToList();
+            return PartialView();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ImportExcel(ImportExcelRequest request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return IsValidResult();
+
+                request.UserId = User.GetUserId();
+                return await ActionResult(await _soLieuSinhTruongService.ImportExcel(request));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Đã có lỗi xãy ra khi import Excel");
+                return ErrorResult();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ExportExcel(ExportExcelRequest request)
+        {
+            try
+            {
+                request.UserId = User.GetUserId();
+                return await _soLieuSinhTruongService.ExportExcel(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Đã có lỗi xãy ra khi export Excel");
+                return ErrorResult();
+            }
+        }
     }
 }

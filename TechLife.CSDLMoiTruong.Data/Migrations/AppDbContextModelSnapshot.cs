@@ -80,7 +80,7 @@ namespace TechLife.CSDLMoiTruong.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CoSoSanXuat");
+                    b.ToTable("CoSoSanXuat", (string)null);
                 });
 
             modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.DiaBanAnhHuong", b =>
@@ -131,7 +131,7 @@ namespace TechLife.CSDLMoiTruong.Data.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("DiaBanAnhHuong");
+                    b.ToTable("DiaBanAnhHuong", (string)null);
                 });
 
             modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.DonViCongBo", b =>
@@ -186,7 +186,7 @@ namespace TechLife.CSDLMoiTruong.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DonViCongBo");
+                    b.ToTable("DonViCongBo", (string)null);
                 });
 
             modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.LoaiCayTrong", b =>
@@ -232,7 +232,7 @@ namespace TechLife.CSDLMoiTruong.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LoaiCayTrong");
+                    b.ToTable("LoaiCayTrong", (string)null);
                 });
 
             modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.SanPhamCongBo", b =>
@@ -289,7 +289,7 @@ namespace TechLife.CSDLMoiTruong.Data.Migrations
 
                     b.HasIndex("DonViCongBoId");
 
-                    b.ToTable("SanPhamCongBo");
+                    b.ToTable("SanPhamCongBo", (string)null);
                 });
 
             modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.SinhVatGayHai", b =>
@@ -340,7 +340,7 @@ namespace TechLife.CSDLMoiTruong.Data.Migrations
 
                     b.HasIndex("LoaiCayTrongId");
 
-                    b.ToTable("SinhVatGayHai");
+                    b.ToTable("SinhVatGayHai", (string)null);
                 });
 
             modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.SoLieuSinhTruong", b =>
@@ -400,7 +400,7 @@ namespace TechLife.CSDLMoiTruong.Data.Migrations
 
                     b.HasIndex("LoaiCayTrongId");
 
-                    b.ToTable("SoLieuSinhTruong");
+                    b.ToTable("SoLieuSinhTruong", (string)null);
                 });
 
             modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.ThoiTiet", b =>
@@ -455,7 +455,7 @@ namespace TechLife.CSDLMoiTruong.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ThoiTiet");
+                    b.ToTable("ThoiTiet", (string)null);
                 });
 
             modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.TinhHinhGayHaiCayTrong", b =>
@@ -514,7 +514,7 @@ namespace TechLife.CSDLMoiTruong.Data.Migrations
 
                     b.HasIndex("SinhVatGayHaiId");
 
-                    b.ToTable("TinhHinhGayHaiCayTrong");
+                    b.ToTable("TinhHinhGayHaiCayTrong", (string)null);
                 });
 
             modelBuilder.Entity("TechLife.CSDLMoiTruong.Data.Entities.DiaBanAnhHuong", b =>

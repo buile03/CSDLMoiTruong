@@ -1,0 +1,54 @@
+﻿@model TechLife.CSDLMoiTruong.Model.SoLieuSinhTruong.ImportExcelRequest
+@using TechLife.CSDLMoiTruong.Common;
+<div class="modal-content">
+    <form id="modal-form" enctype="multipart/form-data">
+        <div class="modal-header">
+            <h4 class="modal-title">Import danh sách số liệu sinh trưởng từ Excel</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="alert alert-info">
+                <strong>Hướng dẫn:</strong>
+                <ul>
+                    <li>Tải file mẫu <a href="/SoLieuSinhTruong_Template.xlsx" download>Tại đây</a></li>
+                    <li>Chỉ import file Excel (.xlsx) theo đúng định dạng mẫu</li>
+                    <li>Dữ liệu bắt đầu từ dòng 2, dòng 1 là tiêu đề</li>
+                    <li>Chỉ import số liệu sinh trưởng của từng loại cây trồng</li>
+                </ul>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label class="form-label">Chọn file Excel</label> <span class="text-danger">(*)</span>
+                        <input type="file" asp-for="File" class="form-control" accept=".xlsx" required />
+                        <span asp-validation-for="File" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label asp-for="CayTrongId" class="form-label">Loại cây trồng</label>
+                        <select asp-for="CayTrongId" asp-items="ViewBag.LoaiCayTrongItems" class="form-select">
+                            <option value="">-- Không chọn loại cây --</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            @Html.AntiForgeryToken()
+            <button type="button" data-bs-dismiss="modal" class="btn btn-secondary">Đóng</button>
+            <button type="submit" class="btn btn-primary">Import</button>
+        </div>
+    </form>
+    @{
+        await Html.RenderPartialAsync("_ModalScript",
+        new TechLife.CSDLMoiTruong.App.Models.ModalFormRequest()
+            {
+                FormId = "modal-form",
+                UrlSubmit = "/SoLieuSinhTruong/ImportExcel",
+                UrlPathLoadData = Context.Request.Query["resultUrl"],
+                LoadDataId = "box-content"
+            });
+    }
+</div>

@@ -42,8 +42,11 @@
                                             <option value="0">Chọn loại cây trồng</option>
                                         </select>
                                     </div>
+                                    <!-- In the button section -->
                                     <div class="col-md-3 text-right">
                                         <button type="button" title="Thêm số liệu sinh trưởng" data-link="@Context.Request.GetRawUrl("/SoLieuSinhTruong/List/")" data-url="/SoLieuSinhTruong/Create/" data-toggle="modal" data-target="#modal" class="btn btn-success btn-sm popup"><i class="fa fa-plus-circle"></i> Thêm mới</button>
+                                        <button type="button" title="Import Excel" data-link="@Context.Request.GetRawUrl("/SoLieuSinhTruong/List/")" data-url="/SoLieuSinhTruong/ImportExcel/" data-toggle="modal" data-target="#modal" class="btn btn-info btn-sm popup"><i class="fa fa-upload"></i> Import</button>
+                                        <button type="button" title="Export Excel" onclick="exportExcel()" class="btn btn-warning btn-sm"><i class="fa fa-download"></i> Export</button>
                                     </div>
                                 </div>
                             </div>
@@ -71,5 +74,48 @@
             });
             pageSetUp();
         });
+        $(document).ready(function () {
+            let element = document.getElementById('box-content');
+            loadContent('@Html.Raw(Context.Request.GetRawUrl("/SoLieuSinhTruong/List/"))', element);
+
+            $("#CayTrongId, #status").on("change", function () {
+                this.form.submit()
+            });
+            pageSetUp();
+        });
+
+        function exportExcel() {
+            var cayTrongId = $('#CayTrongId').val();
+            var keyword = $('#Keyword').val();
+
+            if (cayTrongId === "0") {
+                cayTrongId = null;
+            }
+
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/SoLieuSinhTruong/ExportExcel';
+
+            var inputCayTrong = document.createElement('input');
+            inputCayTrong.type = 'hidden';
+            inputCayTrong.name = 'CayTrongId';
+            inputCayTrong.value = cayTrongId;
+            form.appendChild(inputCayTrong);
+
+            var inputKeyword = document.createElement('input');
+            inputKeyword.type = 'hidden';
+            inputKeyword.name = 'Keyword';
+            inputKeyword.value = keyword;
+            form.appendChild(inputKeyword);
+
+            var token = document.createElement('input');
+            token.type = 'hidden';
+            token.name = '__RequestVerificationToken';
+            token.value = $('input[name="__RequestVerificationToken"]').val();
+            form.appendChild(token);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
     </script>
 }
