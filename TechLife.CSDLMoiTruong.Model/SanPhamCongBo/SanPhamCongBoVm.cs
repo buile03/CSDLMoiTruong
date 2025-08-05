@@ -14,7 +14,7 @@ namespace TechLife.CSDLMoiTruong.Model.SanPhamCongBo
         public string Code { get; set; }
         public string Description { get; set; }
 
-        public int DonViCongBoId { get; set; }
+        public int? DonViCongBoId { get; set; }
         public string DonViCongBoName { get; set; }
 
         public string SoCongBo { get; set; }

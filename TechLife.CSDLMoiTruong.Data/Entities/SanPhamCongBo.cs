@@ -14,7 +14,7 @@ namespace TechLife.CSDLMoiTruong.Data.Entities
         public string Code { get; set; }
         public string Description { get; set; }
 
-        public int DonViCongBoId { get; set; }
+        public int? DonViCongBoId { get; set; }
         public virtual DonViCongBo DonViCongBo { get; set; }
 
         public string SoCongBo { get; set; }

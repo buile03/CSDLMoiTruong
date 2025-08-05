@@ -43,9 +43,10 @@ namespace TechLife.CSDLMoiTruong.Service
             try
             {
                 var query = from sp in _context.SanPhamCongBo
-                            join dv in _context.DonViCongBo on sp.DonViCongBoId equals dv.Id
+                            join dv in _context.DonViCongBo on sp.DonViCongBoId equals dv.Id into dvGroup
+                            from dv in dvGroup.DefaultIfEmpty()
                             where !sp.IsDelete
-                            && (request.DonViCongBoId == null || sp.DonViCongBoId == request.DonViCongBoId)
+                            && (request.DonViCongBoId == null || request.DonViCongBoId == 0 || sp.DonViCongBoId == request.DonViCongBoId)
                             && (string.IsNullOrEmpty(request.Keyword) ||
                                (sp.Description.Contains(request.Keyword) ||
                                 sp.Name.Contains(request.Keyword) ||
@@ -116,7 +117,8 @@ namespace TechLife.CSDLMoiTruong.Service
             try
             {
                 var query = from sp in _context.SanPhamCongBo
-                            join dv in _context.DonViCongBo on sp.DonViCongBoId equals dv.Id
+                            join dv in _context.DonViCongBo on sp.DonViCongBoId equals dv.Id into dvGroup
+                            from dv in dvGroup.DefaultIfEmpty()
                             where !sp.IsDelete && sp.Id == id
                             select new SanPhamCongBoVm
                             {
@@ -335,11 +337,13 @@ namespace TechLife.CSDLMoiTruong.Service
                                 var sanPham = new SanPhamCongBo
                                 {
                                     Name = worksheet.Cell(row, 1).GetString().Trim(),
-                                    Code = worksheet.Cell(row, 2).GetString().Trim(),
+                                    Code = worksheet.Cell(row, 2).GetString().Trim() ?? "",
                                     DonViCongBoId = request.DonViCongBoId,
-                                    SoCongBo = worksheet.Cell(row, 3).GetString().Trim(),
-                                    NgayCongBo = DateTime.Parse(worksheet.Cell(row, 4).GetString()),
-                                    Description = worksheet.Cell(row, 5).GetString().Trim(),
+                                    SoCongBo = worksheet.Cell(row, 3).GetString().Trim() ?? "",
+                                    NgayCongBo = string.IsNullOrWhiteSpace(worksheet.Cell(row, 4).GetString().Trim())
+                                        ? DateTime.Now
+                                        : DateTime.Parse(worksheet.Cell(row, 4).GetString().Trim()),
+                                    Description = worksheet.Cell(row, 5).GetString().Trim() ?? "",
                                     Order = 1,
                                     IsStatus = true,
                                     IsDelete = false,
@@ -376,7 +380,8 @@ namespace TechLife.CSDLMoiTruong.Service
             try
             {
                 var query = from sp in _context.SanPhamCongBo
-                            join dv in _context.DonViCongBo on sp.DonViCongBoId equals dv.Id
+                            join dv in _context.DonViCongBo on sp.DonViCongBoId equals dv.Id into dvGroup
+                            from dv in dvGroup.DefaultIfEmpty()
                             where !sp.IsDelete
                             && (request.DonViCongBoId == null || request.DonViCongBoId == 0 || sp.DonViCongBoId == request.DonViCongBoId)
                             && (request.Ids == null || request.Ids.Contains(sp.Id))

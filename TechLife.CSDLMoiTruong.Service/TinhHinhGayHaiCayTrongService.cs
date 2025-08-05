@@ -142,7 +142,7 @@ namespace TechLife.CSDLMoiTruong.Service
                     return Result<int>.Error(_action, "Ngày kết thúc phải lớn hơn ngày bắt đầu");
                 }
 
-                if ((request.DenNgay - request.TuNgay).TotalDays != 7)
+                if ((request.DenNgay - request.TuNgay).TotalDays != 6)
                 {
                     return Result<int>.Error(_action, "Khoảng cách giữa từ ngày và đến ngày phải là 1 tuần");
                 }
@@ -187,14 +187,12 @@ namespace TechLife.CSDLMoiTruong.Service
                 if (obj == null)
                     return Result<int>.Error(_action, "Không tìm thấy bản ghi cần sửa");
 
-                // Kiểm tra khoảng thời gian
                 if (request.DenNgay <= request.TuNgay)
                 {
                     return Result<int>.Error(_action, "Ngày kết thúc phải lớn hơn ngày bắt đầu");
                 }
 
-                // Kiểm tra khoảng cách 1 tuần
-                if ((request.DenNgay - request.TuNgay).TotalDays != 7)
+                if ((request.DenNgay - request.TuNgay).TotalDays != 6)
                 {
                     return Result<int>.Error(_action, "Khoảng cách giữa từ ngày và đến ngày phải là 1 tuần");
                 }

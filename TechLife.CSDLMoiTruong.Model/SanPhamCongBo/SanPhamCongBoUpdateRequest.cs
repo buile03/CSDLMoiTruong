@@ -19,7 +19,7 @@ namespace TechLife.CSDLMoiTruong.Model.SanPhamCongBo
 
         [Required(ErrorMessage = "Vui lòng chọn đơn vị")]
         [Display(Name = "Đơn vị công bố")]
-        public int DonViCongBoId { get; set; }
+        public int? DonViCongBoId { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập số công bố")]
         [Display(Name = "Số công bố")]
