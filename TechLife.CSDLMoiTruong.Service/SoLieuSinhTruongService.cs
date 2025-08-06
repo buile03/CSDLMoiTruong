@@ -324,18 +324,48 @@ namespace TechLife.CSDLMoiTruong.Service
                         var worksheet = workbook.Worksheet(1);
                         var rowCount = worksheet.RowsUsed().Count();
 
+                        if (worksheet.Cell(1, 1).GetString() != "Loại cây trồng" ||
+                            worksheet.Cell(1, 2).GetString() != "Từ ngày" ||
+                            worksheet.Cell(1, 3).GetString() != "Đến ngày")
+                        {
+                            return Result<int>.Error(_action, "File Excel không đúng định dạng. Vui lòng tải file mẫu và làm theo hướng dẫn.");
+                        }
+
                         for (int row = 2; row <= rowCount; row++)
                         {
                             try
                             {
+                                var tenLoaiCay = worksheet.Cell(row, 1).GetString().Trim();
+                                if (string.IsNullOrEmpty(tenLoaiCay))
+                                    continue;
+
+                                var loaiCayTrong = await _context.LoaiCayTrong
+                                    .FirstOrDefaultAsync(x => x.Name.ToLower() == tenLoaiCay.ToLower());
+
+                                if (loaiCayTrong == null)
+                                {
+                                    loaiCayTrong = new LoaiCayTrong
+                                    {
+                                        Name = tenLoaiCay,
+                                        Code = GenerateCodeFromName(tenLoaiCay),
+                                        Description = $"Tự động tạo khi import số liệu sinh trưởng ngày {DateTime.Now:dd/MM/yyyy}",
+                                        IsStatus = true,
+                                        IsDelete = false,
+                                        CreateOnDate = DateTime.Now,
+                                        LastModifiedOnDate = DateTime.Now
+                                    };
+                                    _context.LoaiCayTrong.Add(loaiCayTrong);
+                                    await _context.SaveChangesAsync();
+                                }
+
                                 var soLieu = new SoLieuSinhTruong
                                 {
-                                    CayTrongId = request.CayTrongId,
-                                    TuNgay = DateTime.Parse(worksheet.Cell(row, 1).GetString().Trim()),
-                                    DenNgay = DateTime.Parse(worksheet.Cell(row, 2).GetString().Trim()),
-                                    KeHoach = worksheet.Cell(row, 3).GetValue<double>(),
-                                    DaGieoTrong = worksheet.Cell(row, 4).GetValue<double>(),
-                                    MoTa = worksheet.Cell(row, 5).GetString().Trim() ?? "",
+                                    CayTrongId = loaiCayTrong.Id,
+                                    TuNgay = DateTime.Parse(worksheet.Cell(row, 2).GetString().Trim()),
+                                    DenNgay = DateTime.Parse(worksheet.Cell(row, 3).GetString().Trim()),
+                                    KeHoach = worksheet.Cell(row, 4).GetValue<double>(),
+                                    DaGieoTrong = worksheet.Cell(row, 5).GetValue<double>(),
+                                    MoTa = worksheet.Cell(row, 6).GetString().Trim() ?? "",
                                     Order = 1,
                                     IsStatus = true,
                                     IsDelete = false,
@@ -367,6 +397,10 @@ namespace TechLife.CSDLMoiTruong.Service
             }
         }
 
+        private string GenerateCodeFromName(string name)
+        {
+            return name.ToUpper().Replace(" ", "");
+        }
         public async Task<FileResult> ExportExcel(ExportExcelRequest request)
         {
             try
