@@ -336,6 +336,7 @@ namespace TechLife.CSDLMoiTruong.Service
                         {
                             try
                             {
+                                int currentCoSoCount = await _context.CoSoSanXuat.CountAsync();
                                 var coSo = new CoSoSanXuat
                                 {
                                     Name = worksheet.Cell(row, 1).GetString().Trim(),
@@ -346,7 +347,7 @@ namespace TechLife.CSDLMoiTruong.Service
                                     ChuCoSo = worksheet.Cell(row, 6).GetString().Trim() ?? "",
                                     MaSoThue = worksheet.Cell(row, 7).GetString().Trim() ?? "",
                                     GhiChu = worksheet.Cell(row, 8).GetString().Trim() ?? "",
-                                    Order = 1,
+                                    Order = currentCoSoCount + 1,
                                     IsStatus = true,
                                     IsDelete = false,
                                     CreateOnDate = DateTime.Now,

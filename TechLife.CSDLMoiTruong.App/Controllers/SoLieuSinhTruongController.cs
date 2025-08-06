@@ -206,12 +206,7 @@ namespace TechLife.CSDLMoiTruong.App.Controllers
         [HttpGet]
         public async Task<IActionResult> ImportExcel()
         {
-            var listLoaiCayTrong = await _loaiCayTrongService.GetAll();
-            ViewBag.LoaiCayTrongItems = listLoaiCayTrong.Select(v => new SelectListItem()
-            {
-                Text = v.Name,
-                Value = v.Id.ToString(),
-            }).ToList();
+            
             return PartialView();
         }
 

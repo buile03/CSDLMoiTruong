@@ -330,7 +330,7 @@ namespace TechLife.CSDLMoiTruong.Service
                         {
                             return Result<int>.Error(_action, "File Excel không đúng định dạng. Vui lòng tải file mẫu và làm theo hướng dẫn.");
                         }
-
+                        int currentLoaiCayTrongCount = await _context.LoaiCayTrong.CountAsync();
                         for (int row = 2; row <= rowCount; row++)
                         {
                             try
@@ -344,20 +344,22 @@ namespace TechLife.CSDLMoiTruong.Service
 
                                 if (loaiCayTrong == null)
                                 {
+                                    currentLoaiCayTrongCount++;
                                     loaiCayTrong = new LoaiCayTrong
                                     {
                                         Name = tenLoaiCay,
-                                        Code = GenerateCodeFromName(tenLoaiCay),
+                                        Code = "",
                                         Description = $"Tự động tạo khi import số liệu sinh trưởng ngày {DateTime.Now:dd/MM/yyyy}",
                                         IsStatus = true,
                                         IsDelete = false,
+                                        Order = currentLoaiCayTrongCount,
                                         CreateOnDate = DateTime.Now,
                                         LastModifiedOnDate = DateTime.Now
                                     };
                                     _context.LoaiCayTrong.Add(loaiCayTrong);
                                     await _context.SaveChangesAsync();
                                 }
-
+                                int currentSoLieuCount = await _context.SoLieuSinhTruong.CountAsync();
                                 var soLieu = new SoLieuSinhTruong
                                 {
                                     CayTrongId = loaiCayTrong.Id,
@@ -366,7 +368,7 @@ namespace TechLife.CSDLMoiTruong.Service
                                     KeHoach = worksheet.Cell(row, 4).GetValue<double>(),
                                     DaGieoTrong = worksheet.Cell(row, 5).GetValue<double>(),
                                     MoTa = worksheet.Cell(row, 6).GetString().Trim() ?? "",
-                                    Order = 1,
+                                    Order = currentSoLieuCount + 1,
                                     IsStatus = true,
                                     IsDelete = false,
                                     CreateOnDate = DateTime.Now,
@@ -397,10 +399,6 @@ namespace TechLife.CSDLMoiTruong.Service
             }
         }
 
-        private string GenerateCodeFromName(string name)
-        {
-            return name.ToUpper().Replace(" ", "");
-        }
         public async Task<FileResult> ExportExcel(ExportExcelRequest request)
         {
             try

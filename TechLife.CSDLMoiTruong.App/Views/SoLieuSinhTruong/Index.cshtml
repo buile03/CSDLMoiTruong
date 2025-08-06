@@ -74,15 +74,7 @@
             });
             pageSetUp();
         });
-        $(document).ready(function () {
-            let element = document.getElementById('box-content');
-            loadContent('@Html.Raw(Context.Request.GetRawUrl("/SoLieuSinhTruong/List/"))', element);
-
-            $("#CayTrongId, #status").on("change", function () {
-                this.form.submit()
-            });
-            pageSetUp();
-        });
+        
 
         function exportExcel() {
             var cayTrongId = $('#CayTrongId').val();

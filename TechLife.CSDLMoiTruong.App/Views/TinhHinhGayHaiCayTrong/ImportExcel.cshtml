@@ -1,9 +1,9 @@
-﻿@model TechLife.CSDLMoiTruong.Model.SanPhamCongBo.ImportExcelRequest
+﻿@model TechLife.CSDLMoiTruong.Model.TinhHinhGayHaiCayTrong.ImportExcelRequest
 @using TechLife.CSDLMoiTruong.Common;
 <div class="modal-content">
     <form id="modal-form" enctype="multipart/form-data">
         <div class="modal-header">
-            <h4 class="modal-title">Import danh sách sản phẩm từ Excel</h4>
+            <h4 class="modal-title">Import danh sách tình hình gây hại từ Excel</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -37,7 +37,7 @@
         new TechLife.CSDLMoiTruong.App.Models.ModalFormRequest()
             {
                 FormId = "modal-form",
-                UrlSubmit = "/SanPhamCongBo/ImportExcel",
+                UrlSubmit = "/TinhHinhGayHaiCayTrong/ImportExcel",
                 UrlPathLoadData = Context.Request.Query["resultUrl"],
                 LoadDataId = "box-content"
             });

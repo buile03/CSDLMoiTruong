@@ -11,6 +11,5 @@ namespace TechLife.CSDLMoiTruong.Model.SanPhamCongBo
     public class ImportExcelRequest : RequestBase
     {
         public IFormFile File { get; set; }
-        public int? DonViCongBoId { get; set; }
     }
 }

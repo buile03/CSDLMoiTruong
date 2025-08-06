@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ClosedXML.Excel;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using TechLife.CSDLMoiTruong.Common;
 using TechLife.CSDLMoiTruong.Common.Enums;
@@ -22,6 +25,8 @@ namespace TechLife.CSDLMoiTruong.Service
         Task<Result<int>> UpdateOrder(UpdateOrderRequest request);
 
         Task<Result<int>> UpdateStatus(UpdateStatusRequest request);
+        Task<Result<int>> ImportExcel(ImportExcelRequest request);
+        Task<FileResult> ExportExcel(ExportExcelRequest request);
 
     }
 
@@ -306,6 +311,232 @@ namespace TechLife.CSDLMoiTruong.Service
                 return Result<int>.Error(_action, id);
             }
             catch
+            {
+                throw;
+            }
+        }
+        public async Task<Result<int>> ImportExcel(ImportExcelRequest request)
+        {
+            try
+            {
+                _action = "Import danh sách tình hình gây hại cây trồng từ Excel";
+
+                if (request.File == null || request.File.Length == 0)
+                    return Result<int>.Error(_action, "Vui lòng chọn file Excel");
+
+                var listTinhHinh = new List<TinhHinhGayHaiCayTrong>();
+
+                using var stream = new MemoryStream();
+                await request.File.CopyToAsync(stream);
+
+                using var workbook = new XLWorkbook(stream);
+                var worksheet = workbook.Worksheet(1);
+                var rowCount = worksheet.RowsUsed().Count();
+
+                if (worksheet.Cell(1, 1).GetString() != "Loại cây trồng" ||
+                    worksheet.Cell(1, 2).GetString() != "Sinh vật gây hại" ||
+                    worksheet.Cell(1, 3).GetString() != "Địa bàn" ||
+                    worksheet.Cell(1, 4).GetString() != "Từ ngày" ||
+                    worksheet.Cell(1, 5).GetString() != "Đến ngày")
+                {
+                    return Result<int>.Error(_action, "File Excel không đúng định dạng.");
+                }
+
+                int currentLoaiCayCount = await _context.LoaiCayTrong.CountAsync();
+                int currentSinhVatCount = await _context.SinhVatGayHai.CountAsync();
+                int currentDiaBanCount = await _context.DiaBanAnhHuong.CountAsync();
+
+                for (int row = 2; row <= rowCount; row++)
+                {
+                    try
+                    {
+                        var tenLoaiCay = worksheet.Cell(row, 1).GetString().Trim();
+                        var tenSinhVat = worksheet.Cell(row, 2).GetString().Trim();
+                        var tenDiaBan = worksheet.Cell(row, 3).GetString().Trim();
+
+                        if (string.IsNullOrEmpty(tenLoaiCay) || string.IsNullOrEmpty(tenSinhVat) || string.IsNullOrEmpty(tenDiaBan))
+                            continue;
+
+                        var loaiCay = await _context.LoaiCayTrong.FirstOrDefaultAsync(x => x.Name.ToLower() == tenLoaiCay.ToLower());
+                        if (loaiCay == null)
+                        {
+                            currentLoaiCayCount++;
+                            loaiCay = new LoaiCayTrong
+                            {
+                                Name = tenLoaiCay,
+                                Code = "",
+                                Description = $"Tự động tạo khi import {DateTime.Now:dd/MM/yyyy}",
+                                Order = currentLoaiCayCount,
+                                IsStatus = true,
+                                IsDelete = false,
+                                CreateOnDate = DateTime.Now,
+                                LastModifiedOnDate = DateTime.Now
+                            };
+                            _context.LoaiCayTrong.Add(loaiCay);
+                            await _context.SaveChangesAsync();
+                        }
+
+                        var sinhVat = await _context.SinhVatGayHai.FirstOrDefaultAsync(x => x.Name.ToLower() == tenSinhVat.ToLower());
+                        if (sinhVat == null)
+                        {
+                            currentSinhVatCount++;
+                            sinhVat = new SinhVatGayHai
+                            {
+                                Name = tenSinhVat,
+                                Code = "",
+                                LoaiCayTrongId = loaiCay.Id,
+                                Description = $"Tự động tạo khi import {DateTime.Now:dd/MM/yyyy}",
+                                Order = currentSinhVatCount,
+                                IsStatus = true,
+                                IsDelete = false,
+                                CreateOnDate = DateTime.Now,
+                                LastModifiedOnDate = DateTime.Now
+                            };
+                            _context.SinhVatGayHai.Add(sinhVat);
+                            await _context.SaveChangesAsync();
+                        }
+
+                        var diaBan = await _context.DiaBanAnhHuong.FirstOrDefaultAsync(x => x.Name.ToLower() == tenDiaBan.ToLower());
+                        if (diaBan == null)
+                        {
+                            currentDiaBanCount++;
+                            diaBan = new DiaBanAnhHuong
+                            {
+                                Name = tenDiaBan,
+                                Code = "",
+                                Description = $"Tự động tạo khi import {DateTime.Now:dd/MM/yyyy}",
+                                Order = currentDiaBanCount,
+                                IsStatus = true,
+                                IsDelete = false,
+                                CreateOnDate = DateTime.Now,
+                                LastModifiedOnDate = DateTime.Now
+                            };
+                            _context.DiaBanAnhHuong.Add(diaBan);
+                            await _context.SaveChangesAsync();
+                        }
+
+                        var tuNgay = DateTime.Parse(worksheet.Cell(row, 4).GetString().Trim());
+                        var denNgay = DateTime.Parse(worksheet.Cell(row, 5).GetString().Trim());
+
+                        if ((denNgay - tuNgay).TotalDays != 6)
+                            return Result<int>.Error(_action, $"Khoảng cách ngày không đúng 1 tuần tại dòng {row}");
+
+                        var mucDo = (MucDoNhiem)worksheet.Cell(row, 6).GetValue<int>();
+                        var dienTichStr = worksheet.Cell(row, 7).GetString().Trim().Replace(",", ".");
+                        var dienTich = double.Parse(dienTichStr, CultureInfo.InvariantCulture);
+
+                        var tinhHinh = new TinhHinhGayHaiCayTrong
+                        {
+                            SinhVatGayHaiId = sinhVat.Id,
+                            DiaBanId = diaBan.Id,
+                            TuNgay = tuNgay,
+                            DenNgay = denNgay,
+                            MucDoNhiem = mucDo,
+                            DienTichNhiem = dienTich,
+                            IsStatus = true,
+                            IsDelete = false,
+                            CreateOnDate = DateTime.Now,
+                            LastModifiedOnDate = DateTime.Now
+                        };
+
+                        listTinhHinh.Add(tinhHinh);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
+
+                if (listTinhHinh.Count == 0)
+                    return Result<int>.Error(_action, "Không có dữ liệu hợp lệ để import");
+
+                await _context.TinhHinhGayHaiCayTrong.AddRangeAsync(listTinhHinh);
+                var result = await _context.SaveChangesAsync();
+
+                return Result<int>.Success(_action, result);
+            }
+            catch (Exception ex)
+            {
+                return Result<int>.Error(_action, ex.Message);
+            }
+        }
+
+
+        public async Task<FileResult> ExportExcel(ExportExcelRequest request)
+        {
+            try
+            {
+                var query = from t in _context.TinhHinhGayHaiCayTrong
+                            join sv in _context.SinhVatGayHai on t.SinhVatGayHaiId equals sv.Id
+                            join lct in _context.LoaiCayTrong on sv.LoaiCayTrongId equals lct.Id
+                            join db in _context.DiaBanAnhHuong on t.DiaBanId equals db.Id
+                            where !t.IsDelete
+                            && (request.SinhVatGayHaiId == null || t.SinhVatGayHaiId == request.SinhVatGayHaiId)
+                            && (request.DiaBanAnhHuongId == null || t.DiaBanId == request.DiaBanAnhHuongId)
+                            && (request.MucDoNhiem == null || (int)t.MucDoNhiem == request.MucDoNhiem)
+                            && (string.IsNullOrEmpty(request.Keyword) ||
+                               (sv.Name.Contains(request.Keyword) || db.Name.Contains(request.Keyword)))
+                            orderby t.TuNgay descending
+                            select new
+                            {
+                                LoaiCayTrong = lct.Name,
+                                SinhVatGayHai = sv.Name,
+                                DiaBan = db.Name,
+                                t.TuNgay,
+                                t.DenNgay,
+                                t.MucDoNhiem,
+                                t.DienTichNhiem
+                            };
+
+                var data = await query.ToListAsync();
+
+                using (var workbook = new XLWorkbook())
+                {
+                    var worksheet = workbook.Worksheets.Add("TinhHinhGayHaiCayTrong");
+
+                    // Add headers
+                    worksheet.Cell(1, 1).Value = "Loại cây trồng";
+                    worksheet.Cell(1, 2).Value = "Sinh vật gây hại";
+                    worksheet.Cell(1, 3).Value = "Địa bàn";
+                    worksheet.Cell(1, 4).Value = "Từ ngày";
+                    worksheet.Cell(1, 5).Value = "Đến ngày";
+                    worksheet.Cell(1, 6).Value = "Mức độ nhiễm";
+                    worksheet.Cell(1, 7).Value = "Diện tích nhiễm (ha)";
+
+                    // Style header
+                    var headerRange = worksheet.Range(1, 1, 1, 7);
+                    headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
+                    headerRange.Style.Font.Bold = true;
+
+                    // Add data
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        var row = i + 2;
+                        worksheet.Cell(row, 1).Value = data[i].LoaiCayTrong;
+                        worksheet.Cell(row, 2).Value = data[i].SinhVatGayHai;
+                        worksheet.Cell(row, 3).Value = data[i].DiaBan;
+                        worksheet.Cell(row, 4).Value = data[i].TuNgay.ToString("dd/MM/yyyy");
+                        worksheet.Cell(row, 5).Value = data[i].DenNgay.ToString("dd/MM/yyyy");
+                        worksheet.Cell(row, 6).Value = data[i].MucDoNhiem.ToString();
+                        worksheet.Cell(row, 7).Value = data[i].DienTichNhiem;
+                    }
+
+                    // Auto-fit columns
+                    worksheet.Columns().AdjustToContents();
+
+                    using (var stream = new MemoryStream())
+                    {
+                        workbook.SaveAs(stream);
+                        var content = stream.ToArray();
+                        return new FileContentResult(content,
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                        {
+                            FileDownloadName = $"TinhHinhGayHaiCayTrong_{DateTime.Now:yyyyMMddHHmmss}.xlsx"
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
             {
                 throw;
             }

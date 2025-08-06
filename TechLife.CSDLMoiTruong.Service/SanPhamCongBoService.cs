@@ -330,21 +330,57 @@ namespace TechLife.CSDLMoiTruong.Service
                         var worksheet = workbook.Worksheet(1);
                         var rowCount = worksheet.RowsUsed().Count();
 
-                        for (int row = 2; row <= rowCount; row++) 
+                        if (worksheet.Cell(1, 1).GetString() != "Tên sản phẩm" ||
+                            worksheet.Cell(1, 3).GetString() != "Đơn vị công bố")
+                        {
+                            return Result<int>.Error(_action, "File Excel không đúng định dạng. Vui lòng tải file mẫu và làm theo hướng dẫn.");
+                        }
+
+                        int currentSanPhamCount = await _context.SanPhamCongBo.CountAsync();
+
+                        for (int row = 2; row <= rowCount; row++)
                         {
                             try
                             {
+                                var tenDonVi = worksheet.Cell(row, 3).GetString().Trim();
+                                if (string.IsNullOrEmpty(tenDonVi))
+                                    continue;
+
+                                var donViCongBo = await _context.DonViCongBo
+                                    .FirstOrDefaultAsync(x => x.Name.ToLower() == tenDonVi.ToLower());
+
+                                if (donViCongBo == null)
+                                {
+                                    donViCongBo = new DonViCongBo
+                                    {
+                                        Name = tenDonVi,
+                                        Code = "",
+                                        DiaChi = "",
+                                        SoDienThoai = "",
+                                        Email = "",
+                                        Description = $"Tự động tạo khi import sản phẩm công bố ngày {DateTime.Now:dd/MM/yyyy}",
+                                        Order = await _context.DonViCongBo.CountAsync() + 1,
+                                        IsStatus = true,
+                                        IsDelete = false,
+                                        CreateOnDate = DateTime.Now,
+                                        LastModifiedOnDate = DateTime.Now
+                                    };
+                                    _context.DonViCongBo.Add(donViCongBo);
+                                    await _context.SaveChangesAsync();
+                                }
+
+                                currentSanPhamCount++;
                                 var sanPham = new SanPhamCongBo
                                 {
                                     Name = worksheet.Cell(row, 1).GetString().Trim(),
                                     Code = worksheet.Cell(row, 2).GetString().Trim() ?? "",
-                                    DonViCongBoId = request.DonViCongBoId,
-                                    SoCongBo = worksheet.Cell(row, 3).GetString().Trim() ?? "",
-                                    NgayCongBo = string.IsNullOrWhiteSpace(worksheet.Cell(row, 4).GetString().Trim())
+                                    DonViCongBoId = donViCongBo.Id,
+                                    SoCongBo = worksheet.Cell(row, 4).GetString().Trim() ?? "",
+                                    NgayCongBo = string.IsNullOrWhiteSpace(worksheet.Cell(row, 5).GetString().Trim())
                                         ? DateTime.Now
-                                        : DateTime.Parse(worksheet.Cell(row, 4).GetString().Trim()),
-                                    Description = worksheet.Cell(row, 5).GetString().Trim() ?? "",
-                                    Order = 1,
+                                        : DateTime.Parse(worksheet.Cell(row, 5).GetString().Trim()),
+                                    Description = worksheet.Cell(row, 6).GetString().Trim() ?? "",
+                                    Order = currentSanPhamCount,
                                     IsStatus = true,
                                     IsDelete = false,
                                     CreateOnDate = DateTime.Now,
